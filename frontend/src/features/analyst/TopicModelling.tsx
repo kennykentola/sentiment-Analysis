@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { ScatterChart, Scatter, XAxis, YAxis, ZAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, Cell } from 'recharts';
-import { Download, Search, Filter } from 'lucide-react';
+import { Download, Filter } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 // X: Topic similarity projection, Y: Sentiment Score, Z: Volume (size of bubble)
@@ -59,7 +59,7 @@ export default function TopicModelling() {
                 <RechartsTooltip 
                   cursor={{ strokeDasharray: '3 3' }} 
                   contentStyle={{ backgroundColor: '#18181b', borderColor: '#27272a', borderRadius: '8px', color: '#fff' }}
-                  formatter={(value: any, name: string, props: any) => {
+                  formatter={(value: any, name: any) => {
                     if (name === 'Volume') return [value, 'Total Mentions'];
                     if (name === 'Sentiment') return [`${value}%`, 'Net Sentiment'];
                     return [value, name];

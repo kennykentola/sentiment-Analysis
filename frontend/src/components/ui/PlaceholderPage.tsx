@@ -25,7 +25,7 @@ export default function PlaceholderPage({ title, description }: PlaceholderPageP
         <div className="flex flex-col gap-3">
           <Button 
             className="w-full bg-indigo-600 hover:bg-indigo-700 text-white"
-            onClick={() => window.history.back()}
+            onClick={() => navigate(-1)}
           >
             <ArrowLeft className="mr-2 h-4 w-4" />
             Go Back

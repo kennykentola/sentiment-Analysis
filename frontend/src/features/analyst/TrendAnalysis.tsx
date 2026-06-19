@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
-import { Calendar, Filter } from 'lucide-react';
+import { Calendar, Filter, TrendingUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const mockTrendData = [
