@@ -40,8 +40,8 @@ export const AnalyticsAPI = {
 };
 
 export const RolesAPI = {
-    getRoles: () => fetchWithAuth('/roles'),
-    createRole: (data: any) => fetchWithAuth('/roles', {
+    getRoles: () => fetchWithAuth('/roles/'),
+    createRole: (data: any) => fetchWithAuth('/roles/', {
         method: 'POST',
         body: JSON.stringify(data)
     }),
