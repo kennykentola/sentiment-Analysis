@@ -55,11 +55,10 @@ import ForgotPassword from '../pages/auth/ForgotPassword';
 import VerifyEmail from '../pages/auth/VerifyEmail';
 
 import About from '../pages/public/About';
-import Features from '../pages/public/Features';
-import Pricing from '../pages/public/Pricing';
-import Documentation from '../pages/public/Documentation';
 import Contact from '../pages/public/Contact';
 import Careers from '../pages/public/Careers';
+import Privacy from '../pages/public/Privacy';
+import Terms from '../pages/public/Terms';
 import NotFound from '../pages/public/NotFound';
 
 export const router = createBrowserRouter([
@@ -75,6 +74,8 @@ export const router = createBrowserRouter([
       { path: 'docs', element: <Documentation /> },
       { path: 'contact', element: <Contact /> },
       { path: 'careers', element: <Careers /> },
+      { path: 'privacy', element: <Privacy /> },
+      { path: 'terms', element: <Terms /> },
     ]
   },
   {
