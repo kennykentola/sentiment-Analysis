@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { PieChart, Pie, Cell, Tooltip as PieTooltip, BarChart, Bar, XAxis, YAxis, CartesianGrid, Legend, ResponsiveContainer, LineChart, Line } from 'recharts';
+import { PieChart, Pie, Cell, Tooltip as PieTooltip, BarChart, Bar, XAxis, YAxis, CartesianGrid, Legend, ResponsiveContainer, LineChart, Line, ScatterChart, Scatter, ZAxis } from 'recharts';
 import { MessageCircle, MessageSquare, Globe, Filter, MoreHorizontal, ArrowUpRight, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { account } from '@/services/appwrite';
@@ -66,6 +66,30 @@ export default function AnalystDashboard() {
     { id: 3, text: "When will ASUU call off this strike so we can even pay the fees? Tired of staying home.", platform: "Twitter", sentiment: "Negative", conf: "0.91" },
     { id: 4, text: "I heard the management is discussing installment payments. Hope it's true.", platform: "Forums", sentiment: "Neutral", conf: "0.75" },
     { id: 5, text: "This administration is completely detached from the reality of average students.", platform: "Twitter", sentiment: "Negative", conf: "0.99" },
+  ];
+
+  const topicData = [
+    { name: 'Sapa', x: 20, y: 70, z: 200, fill: '#f43f5e' },
+    { name: 'Hostel Fees', x: 40, y: 30, z: 150, fill: '#8b5cf6' },
+    { name: 'Protest', x: 60, y: 80, z: 300, fill: '#e11d48' },
+    { name: 'Strike', x: 80, y: 40, z: 250, fill: '#6366f1' },
+    { name: 'Management', x: 50, y: 50, z: 100, fill: '#10b981' },
+  ];
+
+  const regionalData = [
+    { region: 'South West', intensity: 85 },
+    { region: 'South East', intensity: 72 },
+    { region: 'South South', intensity: 65 },
+    { region: 'North Central', intensity: 55 },
+    { region: 'North West', intensity: 40 },
+    { region: 'North East', intensity: 38 },
+  ];
+  
+  const sourceData = [
+    { source: 'Twitter', count: 8500 },
+    { source: 'Facebook', count: 4200 },
+    { source: 'Nairaland', count: 3100 },
+    { source: 'News Blogs', count: 1200 },
   ];
 
   return (
@@ -166,6 +190,70 @@ export default function AnalystDashboard() {
                 </BarChart>
               </ResponsiveContainer>
             )}
+          </CardContent>
+        </Card>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Topic Clusters */}
+        <Card className="bg-zinc-900 border-zinc-800 text-white shadow-none">
+          <CardHeader>
+            <CardTitle>Topic Clusters</CardTitle>
+            <CardDescription className="text-zinc-400">LDA identified topics by volume</CardDescription>
+          </CardHeader>
+          <CardContent className="h-[300px] w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <ScatterChart margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#27272a" />
+                <XAxis type="number" dataKey="x" name="stdev" hide />
+                <YAxis type="number" dataKey="y" name="freq" hide />
+                <ZAxis type="number" dataKey="z" range={[100, 1000]} name="volume" />
+                <PieTooltip cursor={{ strokeDasharray: '3 3' }} contentStyle={{ backgroundColor: '#18181b', borderColor: '#27272a', borderRadius: '0.5rem' }} />
+                <Scatter name="Topics" data={topicData} fill="#8884d8">
+                  {topicData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={entry.fill} />
+                  ))}
+                </Scatter>
+              </ScatterChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
+
+        {/* Source Analysis */}
+        <Card className="bg-zinc-900 border-zinc-800 text-white shadow-none">
+          <CardHeader>
+            <CardTitle>Source Analysis</CardTitle>
+            <CardDescription className="text-zinc-400">Volume by data source</CardDescription>
+          </CardHeader>
+          <CardContent className="h-[300px] w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart layout="vertical" data={sourceData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#27272a" horizontal={true} vertical={false} />
+                <XAxis type="number" stroke="#a1a1aa" hide />
+                <YAxis dataKey="source" type="category" stroke="#a1a1aa" axisLine={false} tickLine={false} />
+                <PieTooltip contentStyle={{ backgroundColor: '#18181b', borderColor: '#27272a', borderRadius: '0.5rem' }} cursor={{ fill: '#27272a' }} />
+                <Bar dataKey="count" fill="#3b82f6" radius={[0, 4, 4, 0]} barSize={20} />
+              </BarChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
+
+        {/* Regional Heatmap */}
+        <Card className="bg-zinc-900 border-zinc-800 text-white shadow-none">
+          <CardHeader>
+            <CardTitle>Regional Intensity</CardTitle>
+            <CardDescription className="text-zinc-400">Protest mentions by geopolitical zone</CardDescription>
+          </CardHeader>
+          <CardContent className="h-[300px] w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={regionalData} margin={{ top: 20, right: 30, left: 0, bottom: 0 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#27272a" vertical={false} />
+                <XAxis dataKey="region" stroke="#a1a1aa" tickLine={false} axisLine={false} tick={{fontSize: 12}} />
+                <YAxis stroke="#a1a1aa" tickLine={false} axisLine={false} hide />
+                <PieTooltip contentStyle={{ backgroundColor: '#18181b', borderColor: '#27272a', borderRadius: '0.5rem' }} cursor={{ fill: '#27272a' }} />
+                <Bar dataKey="intensity" fill="#f59e0b" radius={[4, 4, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
           </CardContent>
         </Card>
       </div>

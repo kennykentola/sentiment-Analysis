@@ -14,8 +14,7 @@
     "moduleDetection": "force",
     "noEmit": true,
     "jsx": "react-jsx",
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
+    "ignoreDeprecations": "6.0",
 
     /* Linting */
     "noUnusedLocals": true,

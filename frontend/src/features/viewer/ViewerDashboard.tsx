@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { Activity, AlertTriangle, MessageSquare, TrendingUp, Loader2, Clock } from 'lucide-react';
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend, LineChart, Line, XAxis, YAxis, CartesianGrid, BarChart, Bar } from 'recharts';
 import { account } from '@/services/appwrite';
 import { useAuth } from '@/contexts/AuthContext';
 
@@ -43,6 +43,24 @@ export default function ViewerDashboard() {
     { id: 1, text: "Sudden spike in negative sentiment detected for 'University of Lagos'.", time: "10 mins ago", type: "high" },
     { id: 2, text: "Trending topic: 'Hostel accommodation fees' reaching viral threshold.", time: "1 hour ago", type: "medium" },
     { id: 3, text: "Weekly automated report generated for Ministry of Education.", time: "5 hours ago", type: "info" },
+  ];
+
+  const trendData = [
+    { day: 'Mon', positive: 240, negative: 400 },
+    { day: 'Tue', positive: 221, negative: 300 },
+    { day: 'Wed', positive: 229, negative: 200 },
+    { day: 'Thu', positive: 200, negative: 278 },
+    { day: 'Fri', positive: 218, negative: 189 },
+    { day: 'Sat', positive: 250, negative: 239 },
+    { day: 'Sun', positive: 210, negative: 349 },
+  ];
+
+  const universityData = [
+    { name: 'UNILAG', posts: 4200 },
+    { name: 'OAU', posts: 3100 },
+    { name: 'ABU Zaria', posts: 2800 },
+    { name: 'UI', posts: 2100 },
+    { name: 'UNN', posts: 1500 },
   ];
 
   return (
@@ -138,6 +156,42 @@ export default function ViewerDashboard() {
                 <p className="text-sm text-zinc-300 leading-relaxed">{alert.text}</p>
               </div>
             ))}
+          </div>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Sentiment Trends */}
+        <div className="bg-zinc-900 border border-zinc-800 p-6 rounded-2xl">
+          <h3 className="text-lg font-semibold text-white mb-6">Sentiment Trends (7 Days)</h3>
+          <div className="h-80 w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={trendData} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#27272a" vertical={false} />
+                <XAxis dataKey="day" stroke="#a1a1aa" tickLine={false} />
+                <YAxis stroke="#a1a1aa" tickLine={false} />
+                <Tooltip contentStyle={{ backgroundColor: '#18181b', borderColor: '#27272a', borderRadius: '0.5rem' }} />
+                <Legend />
+                <Line type="monotone" dataKey="negative" stroke="#e11d48" strokeWidth={2} dot={{ r: 4 }} name="Negative Sentiment" />
+                <Line type="monotone" dataKey="positive" stroke="#10b981" strokeWidth={2} dot={{ r: 4 }} name="Positive Sentiment" />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+
+        {/* Top Universities Monitored */}
+        <div className="bg-zinc-900 border border-zinc-800 p-6 rounded-2xl">
+          <h3 className="text-lg font-semibold text-white mb-6">Top Universities Monitored</h3>
+          <div className="h-80 w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={universityData} margin={{ top: 20, right: 30, left: 0, bottom: 0 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#27272a" vertical={false} />
+                <XAxis dataKey="name" stroke="#a1a1aa" tickLine={false} axisLine={false} />
+                <YAxis stroke="#a1a1aa" tickLine={false} axisLine={false} />
+                <Tooltip contentStyle={{ backgroundColor: '#18181b', borderColor: '#27272a', borderRadius: '0.5rem' }} cursor={{ fill: '#27272a' }} />
+                <Bar dataKey="posts" fill="#3b82f6" radius={[4, 4, 0, 0]} name="Mentions Volume" />
+              </BarChart>
+            </ResponsiveContainer>
           </div>
         </div>
       </div>
