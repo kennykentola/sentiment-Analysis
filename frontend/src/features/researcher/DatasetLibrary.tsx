@@ -20,11 +20,6 @@ export default function DatasetLibrary() {
         </div>
       </div>
 
-      <div className="p-4 bg-indigo-500/10 border border-indigo-500/20 rounded-lg">
-        <h2 className="text-sm font-semibold text-indigo-400 uppercase tracking-wide mb-1">System Core Context</h2>
-        <p className="text-white font-medium">DESIGN AND IMPLEMENTATION OF A SENTIMENT ANALYSIS SYSTEM OF PUBLIC OPINIONS ON SCHOOL FEES HIKES IN NIGERIAN TERTIARY INSTITUTION</p>
-      </div>
-
       <Card className="bg-zinc-900 border-zinc-800 text-white">
         <CardHeader>
           <CardTitle>Available Data Sources</CardTitle>
