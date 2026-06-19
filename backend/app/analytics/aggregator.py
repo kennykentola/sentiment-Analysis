@@ -79,24 +79,17 @@ def get_trend_analytics():
     ]
 
 def get_university_analytics():
-    try:
-        unis_resp = db.list_documents(settings.APPWRITE_DB_ID, 'Universities', [Query.limit(100)])
-        unis = unis_resp.get("documents", [])
-        
-        # In a real app we'd map post.uni_id -> sentiment. Here we just return mock aggregated
-        return [
-            {"name": "UNILAG", "negative": 58, "neutral": 22, "positive": 20, "volume": 18200, "region": "South West", "fill": "#f43f5e"},
-            {"name": "OAU", "negative": 65, "neutral": 25, "positive": 10, "volume": 15400, "region": "South West", "fill": "#f43f5e"},
-            {"name": "University of Ibadan", "negative": 48, "neutral": 30, "positive": 22, "volume": 14100, "region": "South West", "fill": "#f59e0b"},
-            {"name": "ABU", "negative": 45, "neutral": 40, "positive": 15, "volume": 9800, "region": "North West", "fill": "#10b981"},
-            {"name": "UNN", "negative": 50, "neutral": 35, "positive": 15, "volume": 11200, "region": "South East", "fill": "#f59e0b"},
-            {"name": "UNIBEN", "negative": 72, "neutral": 18, "positive": 10, "volume": 12500, "region": "South South", "fill": "#f43f5e"},
-            {"name": "UNILORIN", "negative": 42, "neutral": 38, "positive": 20, "volume": 10500, "region": "North Central", "fill": "#10b981"},
-            {"name": "FUTA", "negative": 60, "neutral": 25, "positive": 15, "volume": 8400, "region": "South West", "fill": "#f43f5e"},
-        ]
-    except Exception as e:
-        print(f"Error university analytics: {e}")
-        return []
+    # Return mock aggregated data as requested
+    return [
+        {"name": "UNILAG", "negative": 58, "neutral": 22, "positive": 20, "volume": 18200, "region": "South West", "fill": "#f43f5e"},
+        {"name": "OAU", "negative": 65, "neutral": 25, "positive": 10, "volume": 15400, "region": "South West", "fill": "#f43f5e"},
+        {"name": "University of Ibadan", "negative": 48, "neutral": 30, "positive": 22, "volume": 14100, "region": "South West", "fill": "#f59e0b"},
+        {"name": "ABU", "negative": 45, "neutral": 40, "positive": 15, "volume": 9800, "region": "North West", "fill": "#10b981"},
+        {"name": "UNN", "negative": 50, "neutral": 35, "positive": 15, "volume": 11200, "region": "South East", "fill": "#f59e0b"},
+        {"name": "UNIBEN", "negative": 72, "neutral": 18, "positive": 10, "volume": 12500, "region": "South South", "fill": "#f43f5e"},
+        {"name": "UNILORIN", "negative": 42, "neutral": 38, "positive": 20, "volume": 10500, "region": "North Central", "fill": "#10b981"},
+        {"name": "FUTA", "negative": 60, "neutral": 25, "positive": 15, "volume": 8400, "region": "South West", "fill": "#f43f5e"},
+    ]
 
 def get_topic_analytics():
     return [
