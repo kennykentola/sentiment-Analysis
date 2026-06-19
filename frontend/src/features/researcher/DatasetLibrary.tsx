@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Database, Download, FileJson, FileSpreadsheet, Search } from 'lucide-react';
+import { Database, FileJson, FileSpreadsheet } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 export default function DatasetLibrary() {

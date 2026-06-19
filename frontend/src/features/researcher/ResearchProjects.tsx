@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Layers, Plus, Users, Clock, FolderKanban } from 'lucide-react';
+import { Plus, Users, Clock, FolderKanban } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 export default function ResearchProjects() {
