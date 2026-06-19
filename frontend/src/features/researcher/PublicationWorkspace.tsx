@@ -1,75 +1,76 @@
-import { useState } from 'react';
-import { Save, FileText, Image as ImageIcon, Link, Bold, Italic, List } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { FileText, BookOpen, ExternalLink, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 export default function PublicationWorkspace() {
-  const [content, setContent] = useState('# Title of the Study\n\nAbstract:\n\n...');
-
   return (
-    <div className="h-[calc(100vh-8rem)] flex flex-col space-y-4 animate-in fade-in duration-500">
-      
-      <div className="flex justify-between items-center">
+    <div className="space-y-6 animate-in fade-in duration-500 max-w-7xl mx-auto">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-white">Publication Draft</h1>
-          <p className="text-zinc-400">Write your paper and pin live charts.</p>
+          <h1 className="text-2xl font-bold tracking-tight text-white flex items-center">
+            Publication Workspace
+          </h1>
+          <p className="text-zinc-400">Draft, format, and organize manuscripts intended for peer review.</p>
         </div>
         <Button className="bg-indigo-600 hover:bg-indigo-700 text-white">
-          <Save className="mr-2" size={16} />
-          Save Draft
+          <Plus className="mr-2 h-4 w-4" />
+          New Draft
         </Button>
       </div>
 
-      <div className="flex-1 grid grid-cols-1 lg:grid-cols-3 gap-6 overflow-hidden">
-        
-        {/* Editor Area */}
-        <div className="lg:col-span-2 bg-zinc-900 border border-zinc-800 rounded-2xl flex flex-col overflow-hidden">
-           <div className="flex items-center gap-2 p-3 border-b border-zinc-800 bg-zinc-950">
-             <Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-zinc-400 hover:text-white"><Bold size={16} /></Button>
-             <Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-zinc-400 hover:text-white"><Italic size={16} /></Button>
-             <div className="w-px h-4 bg-zinc-800 mx-1"></div>
-             <Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-zinc-400 hover:text-white"><List size={16} /></Button>
-             <Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-zinc-400 hover:text-white"><Link size={16} /></Button>
-             <Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-zinc-400 hover:text-white"><ImageIcon size={16} /></Button>
-           </div>
-           <textarea 
-             title="Publication Editor"
-             placeholder="Start typing your draft..."
-             className="flex-1 w-full p-6 bg-transparent border-none resize-none text-zinc-300 focus:outline-none focus:ring-0 leading-relaxed font-mono text-sm"
-             value={content}
-             onChange={(e) => setContent(e.target.value)}
-           />
-        </div>
+      <div className="p-4 bg-indigo-500/10 border border-indigo-500/20 rounded-lg">
+        <h2 className="text-sm font-semibold text-indigo-400 uppercase tracking-wide mb-1">System Core Context</h2>
+        <p className="text-white font-medium">DESIGN AND IMPLEMENTATION OF A SENTIMENT ANALYSIS SYSTEM OF PUBLIC OPINIONS ON SCHOOL FEES HIKES IN NIGERIAN TERTIARY INSTITUTION</p>
+      </div>
 
-        {/* Pinned Charts Sidebar */}
-        <div className="lg:col-span-1 bg-zinc-900 border border-zinc-800 rounded-2xl p-6 overflow-y-auto">
-           <div className="flex items-center gap-2 mb-6">
-              <FileText className="text-indigo-400" size={20} />
-              <h3 className="text-lg font-semibold text-white">Pinned Assets</h3>
-           </div>
-           
-           <div className="space-y-4">
-              <div className="p-4 border border-zinc-800 rounded-xl bg-zinc-950">
-                <div className="h-24 bg-zinc-900 rounded-lg flex items-center justify-center text-zinc-600 text-xs font-mono mb-3 border border-dashed border-zinc-700">
-                   [ Sentiment Evolution Area Chart ]
-                </div>
-                <p className="text-xs font-medium text-zinc-300">Sentiment Evolution (Jan - Jul)</p>
-                <div className="flex gap-2 mt-3">
-                   <Button variant="outline" size="sm" className="h-7 text-xs bg-transparent border-zinc-700 text-zinc-400">Insert Ref</Button>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <Card className="bg-zinc-900 border-zinc-800 text-white lg:col-span-2">
+          <CardHeader>
+            <CardTitle>Recent Drafts</CardTitle>
+            <CardDescription className="text-zinc-400">Work in progress</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex items-start p-4 bg-zinc-950 border border-zinc-800 rounded-lg">
+              <FileText className="w-8 h-8 text-indigo-500 mr-4 mt-1" />
+              <div className="flex-1">
+                <h3 className="font-semibold text-white">Analysis of Tuition Policy Communication</h3>
+                <p className="text-sm text-zinc-400 mt-1 line-clamp-2">
+                  This paper examines the immediate sentiment backlash following the simultaneous announcement of fee hikes across three major federal universities...
+                </p>
+                <div className="flex items-center gap-4 mt-3 text-xs text-zinc-500 font-mono">
+                  <span>Last edited: Yesterday</span>
+                  <span>Word count: 4,250</span>
                 </div>
               </div>
+              <Button variant="ghost" size="sm" className="text-zinc-400 hover:text-white ml-2">
+                Continue
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
 
-              <div className="p-4 border border-zinc-800 rounded-xl bg-zinc-950">
-                <div className="h-24 bg-zinc-900 rounded-lg flex items-center justify-center text-zinc-600 text-xs font-mono mb-3 border border-dashed border-zinc-700">
-                   [ University Radar Chart ]
-                </div>
-                <p className="text-xs font-medium text-zinc-300">University Matrix</p>
-                <div className="flex gap-2 mt-3">
-                   <Button variant="outline" size="sm" className="h-7 text-xs bg-transparent border-zinc-700 text-zinc-400">Insert Ref</Button>
-                </div>
+        <Card className="bg-zinc-900 border-zinc-800 text-white">
+          <CardHeader>
+            <CardTitle>Journal Targets</CardTitle>
+            <CardDescription className="text-zinc-400">Tracked submissions</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="p-3 bg-zinc-950 border border-zinc-800 rounded-lg flex items-center justify-between">
+              <div className="flex items-center">
+                <BookOpen className="w-4 h-4 text-emerald-500 mr-3" />
+                <span className="text-sm font-medium">Journal of African Higher Education</span>
               </div>
-           </div>
-        </div>
-
+              <ExternalLink className="w-3 h-3 text-zinc-500 cursor-pointer hover:text-white" />
+            </div>
+            <div className="p-3 bg-zinc-950 border border-zinc-800 rounded-lg flex items-center justify-between opacity-70">
+              <div className="flex items-center">
+                <BookOpen className="w-4 h-4 text-amber-500 mr-3" />
+                <span className="text-sm font-medium">Educational Policy Analysis Archives</span>
+              </div>
+              <ExternalLink className="w-3 h-3 text-zinc-500 cursor-pointer hover:text-white" />
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
