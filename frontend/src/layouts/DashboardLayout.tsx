@@ -86,14 +86,6 @@ export function DashboardLayout() {
             <Bell size={18} />
             <span>Notifications</span>
           </Link>
-          <Link onClick={() => setIsMobileMenuOpen(false)} to="/app/analyst/profile" className="flex items-center space-x-3 px-3 py-2 text-zinc-400 hover:bg-zinc-800 rounded-md text-sm font-medium transition-colors">
-            <User size={18} />
-            <span>Profile</span>
-          </Link>
-          <Link onClick={() => setIsMobileMenuOpen(false)} to="/app/analyst/settings" className="flex items-center space-x-3 px-3 py-2 text-zinc-400 hover:bg-zinc-800 rounded-md text-sm font-medium transition-colors">
-            <Settings size={18} />
-            <span>Settings</span>
-          </Link>
         </>
       )}
 
@@ -148,14 +140,6 @@ export function DashboardLayout() {
             <Download size={18} />
             <span>Export Center</span>
           </Link>
-          <Link onClick={() => setIsMobileMenuOpen(false)} to="/app/researcher/profile" className="flex items-center space-x-3 px-3 py-2 text-zinc-400 hover:bg-zinc-800 rounded-md text-sm font-medium transition-colors">
-            <User size={18} />
-            <span>Profile</span>
-          </Link>
-          <Link onClick={() => setIsMobileMenuOpen(false)} to="/app/researcher/settings" className="flex items-center space-x-3 px-3 py-2 text-zinc-400 hover:bg-zinc-800 rounded-md text-sm font-medium transition-colors">
-            <Settings size={18} />
-            <span>Settings</span>
-          </Link>
         </>
       )}
 
@@ -186,16 +170,20 @@ export function DashboardLayout() {
             <FileText size={18} />
             <span>Public Reports</span>
           </Link>
-          <Link onClick={() => setIsMobileMenuOpen(false)} to="/app/viewer/profile" className="flex items-center space-x-3 px-3 py-2 text-zinc-400 hover:bg-zinc-800 rounded-md text-sm font-medium transition-colors">
-            <User size={18} />
-            <span>Profile</span>
-          </Link>
-          <Link onClick={() => setIsMobileMenuOpen(false)} to="/app/viewer/settings" className="flex items-center space-x-3 px-3 py-2 text-zinc-400 hover:bg-zinc-800 rounded-md text-sm font-medium transition-colors">
-            <Settings size={18} />
-            <span>Settings</span>
-          </Link>
         </>
       )}
+
+      {/* Shared Bottom Links for everyone */}
+      <div className="pt-4 mt-4 border-t border-zinc-800">
+        <Link onClick={() => setIsMobileMenuOpen(false)} to="/app/viewer/profile" className="flex items-center space-x-3 px-3 py-2 text-zinc-400 hover:bg-zinc-800 rounded-md text-sm font-medium transition-colors">
+          <User size={18} />
+          <span>Profile</span>
+        </Link>
+        <Link onClick={() => setIsMobileMenuOpen(false)} to="/app/viewer/settings" className="flex items-center space-x-3 px-3 py-2 text-zinc-400 hover:bg-zinc-800 rounded-md text-sm font-medium transition-colors">
+          <Settings size={18} />
+          <span>Settings</span>
+        </Link>
+      </div>
     </>
   );
 
