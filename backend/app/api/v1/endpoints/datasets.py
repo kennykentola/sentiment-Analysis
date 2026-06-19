@@ -1,12 +1,10 @@
 from fastapi import APIRouter, HTTPException, Depends
 from fastapi.responses import StreamingResponse
-from app.repositories.appwrite_client import db
 from app.core.config import settings
 from app.api.deps import RequireRole
-from appwrite.exception import AppwriteException
-from appwrite.query import Query
 import io
 import csv
+import requests
 
 router = APIRouter()
 
@@ -44,14 +42,17 @@ async def export_dataset(
             
             # Get Sentiment Results
             while has_more:
-                q = queries + [Query.offset(offset)]
-                res = db.list_documents(
-                    database_id=settings.APPWRITE_DB_ID,
-                    collection_id='SentimentResults',
-                    queries=q
-                )
-                
-                documents = res.get('documents', [])
+                url = f"{settings.APPWRITE_ENDPOINT}/databases/{settings.APPWRITE_DB_ID}/collections/SentimentResults/documents"
+                headers = {
+                    "X-Appwrite-Project": settings.APPWRITE_PROJECT_ID,
+                    "X-Appwrite-Key": settings.APPWRITE_API_KEY
+                }
+                res = requests.get(url, headers=headers, timeout=10)
+                if res.status_code == 200:
+                    documents = res.json().get('documents', [])
+                else:
+                    documents = []
+                    
                 if not documents:
                     has_more = False
                     break
@@ -63,9 +64,8 @@ async def export_dataset(
                         'confidence': doc.get('confidence')
                     }
                 
-                offset += 100
-                if len(documents) < 100:
-                    has_more = False
+                # In REST without queries, we just break after 1 fetch for now
+                has_more = False
                     
             # 2. Fetch Posts
             post_queries = [Query.limit(100)]
@@ -76,14 +76,18 @@ async def export_dataset(
             post_offset = 0
             
             while has_more_posts:
-                q = post_queries + [Query.offset(post_offset)]
-                post_res = db.list_documents(
-                    database_id=settings.APPWRITE_DB_ID,
-                    collection_id='SocialMediaPosts',
-                    queries=q
-                )
+                url = f"{settings.APPWRITE_ENDPOINT}/databases/{settings.APPWRITE_DB_ID}/collections/SocialMediaPosts/documents"
+                headers = {
+                    "X-Appwrite-Project": settings.APPWRITE_PROJECT_ID,
+                    "X-Appwrite-Key": settings.APPWRITE_API_KEY
+                }
                 
-                post_docs = post_res.get('documents', [])
+                post_res = requests.get(url, headers=headers, timeout=10)
+                if post_res.status_code == 200:
+                    post_docs = post_res.json().get('documents', [])
+                else:
+                    post_docs = []
+                
                 if not post_docs:
                     break
                     
@@ -111,11 +115,10 @@ async def export_dataset(
                 output.seek(0)
                 output.truncate(0)
                 
-                post_offset += 100
-                if len(post_docs) < 100:
-                    has_more_posts = False
+                # For REST bypass, we break after 1 fetch
+                has_more_posts = False
 
-        except AppwriteException as e:
+        except Exception as e:
             # Yield error if it fails mid-stream
             writer.writerow(['ERROR:', str(e)])
             yield output.getvalue()

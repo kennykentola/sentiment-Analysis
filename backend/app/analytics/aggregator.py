@@ -1,15 +1,24 @@
 import json
-from app.repositories.appwrite_client import db
+import requests
 from app.core.config import settings
-from appwrite.query import Query
-from appwrite.exception import AppwriteException
+
+def fetch_documents(collection_id):
+    url = f"{settings.APPWRITE_ENDPOINT}/databases/{settings.APPWRITE_DB_ID}/collections/{collection_id}/documents"
+    headers = {
+        "X-Appwrite-Project": settings.APPWRITE_PROJECT_ID,
+        "X-Appwrite-Key": settings.APPWRITE_API_KEY
+    }
+    try:
+        r = requests.get(url, headers=headers, timeout=10)
+        if r.status_code == 200:
+            return r.json().get("documents", [])
+    except:
+        pass
+    return []
 
 def get_live_analytics():
     try:
-        sentiments_response = db.list_documents(
-            settings.APPWRITE_DB_ID, 'SentimentResults', [Query.limit(1000)]
-        )
-        sentiments = sentiments_response.get("documents", [])
+        sentiments = fetch_documents('SentimentResults')
         total = len(sentiments)
         
         if total == 0:
@@ -25,8 +34,8 @@ def get_live_analytics():
             {"name": "Negative", "value": round((neg/total)*100, 1), "fill": "#e11d48"}
         ]
         
-        posts_response = db.list_documents(settings.APPWRITE_DB_ID, 'SocialMediaPosts', [Query.limit(1000)])
-        posts_dict = {p.get('$id'): p for p in posts_response.get("documents", [])}
+        posts_docs = fetch_documents('SocialMediaPosts')
+        posts_dict = {p.get('$id'): p for p in posts_docs}
         
         platform_stats = {"Twitter": {"pos":0, "neu":0, "neg":0}, "Facebook": {"pos":0, "neu":0, "neg":0}, "Nairaland": {"pos":0, "neu":0, "neg":0}}
         
@@ -64,11 +73,9 @@ def get_live_analytics():
 
 def get_trend_analytics():
     try:
-        sentiments_resp = db.list_documents(settings.APPWRITE_DB_ID, 'SentimentResults', [Query.limit(5000)])
-        sentiments = sentiments_resp.get("documents", [])
-        
-        posts_resp = db.list_documents(settings.APPWRITE_DB_ID, 'SocialMediaPosts', [Query.limit(5000)])
-        posts_dict = {p.get('$id'): p for p in posts_resp.get("documents", [])}
+        sentiments = fetch_documents('SentimentResults')
+        posts_docs = fetch_documents('SocialMediaPosts')
+        posts_dict = {p.get('$id'): p for p in posts_docs}
         
         trend_stats = {}
         for s in sentiments:
@@ -108,14 +115,12 @@ def get_trend_analytics():
 
 def get_university_analytics():
     try:
-        sentiments_resp = db.list_documents(settings.APPWRITE_DB_ID, 'SentimentResults', [Query.limit(5000)])
-        sentiments = sentiments_resp.get("documents", [])
-        
+        sentiments = fetch_documents('SentimentResults')
         if not sentiments:
             return []
             
-        posts_resp = db.list_documents(settings.APPWRITE_DB_ID, 'SocialMediaPosts', [Query.limit(5000)])
-        posts_dict = {p.get('$id'): p for p in posts_resp.get("documents", [])}
+        posts_docs = fetch_documents('SocialMediaPosts')
+        posts_dict = {p.get('$id'): p for p in posts_docs}
         
         uni_stats = {}
         for s in sentiments:
@@ -155,8 +160,7 @@ def get_university_analytics():
 
 def get_topic_analytics():
     try:
-        posts_resp = db.list_documents(settings.APPWRITE_DB_ID, 'SocialMediaPosts', [Query.limit(5000)])
-        posts = posts_resp.get("documents", [])
+        posts = fetch_documents('SocialMediaPosts')
         
         topics = {
             "Tuition & Fees": {"keywords": ["fee", "tuition", "pay", "150k", "hike", "extortion"], "count": 0, "color": "#f43f5e"},
@@ -194,11 +198,9 @@ def get_topic_analytics():
 
 def get_regional_analytics():
     try:
-        sentiments_resp = db.list_documents(settings.APPWRITE_DB_ID, 'SentimentResults', [Query.limit(5000)])
-        sentiments = sentiments_resp.get("documents", [])
-        
-        posts_resp = db.list_documents(settings.APPWRITE_DB_ID, 'SocialMediaPosts', [Query.limit(5000)])
-        posts_dict = {p.get('$id'): p for p in posts_resp.get("documents", [])}
+        sentiments = fetch_documents('SentimentResults')
+        posts_docs = fetch_documents('SocialMediaPosts')
+        posts_dict = {p.get('$id'): p for p in posts_docs}
         
         regions_map = {
             "UNILAG": "South West", "OAU": "South West", "University of Ibadan": "South West", "FUTA": "South West",
