@@ -59,6 +59,7 @@ import Features from '../pages/public/Features';
 import Pricing from '../pages/public/Pricing';
 import Documentation from '../pages/public/Documentation';
 import Contact from '../pages/public/Contact';
+import NotFound from '../pages/public/NotFound';
 
 export const router = createBrowserRouter([
   {
@@ -170,8 +171,11 @@ export const router = createBrowserRouter([
           { path: 'reports', element: <PublicReports /> },
           { path: 'profile', element: <ProfileSettings /> },
           { path: 'settings', element: <ProfileSettings /> }
-        ]
       }
     ],
+  },
+  {
+    path: '*',
+    element: <NotFound />
   }
 ]);
