@@ -79,17 +79,51 @@ def get_trend_analytics():
     ]
 
 def get_university_analytics():
-    # Return mock aggregated data as requested
-    return [
-        {"name": "UNILAG", "negative": 58, "neutral": 22, "positive": 20, "volume": 18200, "region": "South West", "fill": "#f43f5e"},
-        {"name": "OAU", "negative": 65, "neutral": 25, "positive": 10, "volume": 15400, "region": "South West", "fill": "#f43f5e"},
-        {"name": "University of Ibadan", "negative": 48, "neutral": 30, "positive": 22, "volume": 14100, "region": "South West", "fill": "#f59e0b"},
-        {"name": "ABU", "negative": 45, "neutral": 40, "positive": 15, "volume": 9800, "region": "North West", "fill": "#10b981"},
-        {"name": "UNN", "negative": 50, "neutral": 35, "positive": 15, "volume": 11200, "region": "South East", "fill": "#f59e0b"},
-        {"name": "UNIBEN", "negative": 72, "neutral": 18, "positive": 10, "volume": 12500, "region": "South South", "fill": "#f43f5e"},
-        {"name": "UNILORIN", "negative": 42, "neutral": 38, "positive": 20, "volume": 10500, "region": "North Central", "fill": "#10b981"},
-        {"name": "FUTA", "negative": 60, "neutral": 25, "positive": 15, "volume": 8400, "region": "South West", "fill": "#f43f5e"},
-    ]
+    try:
+        sentiments_resp = db.list_documents(settings.APPWRITE_DB_ID, 'SentimentResults', [Query.limit(5000)])
+        sentiments = sentiments_resp.get("documents", [])
+        
+        if not sentiments:
+            return []
+            
+        posts_resp = db.list_documents(settings.APPWRITE_DB_ID, 'SocialMediaPosts', [Query.limit(5000)])
+        posts_dict = {p.get('$id'): p for p in posts_resp.get("documents", [])}
+        
+        uni_stats = {}
+        for s in sentiments:
+            post_id = s.get('post_id')
+            label = s.get('label')
+            post = posts_dict.get(post_id)
+            if post:
+                uni_id = post.get('uni_id')
+                if not uni_id: continue
+                if uni_id not in uni_stats:
+                    uni_stats[uni_id] = {"pos":0, "neu":0, "neg":0, "vol":0}
+                uni_stats[uni_id]["vol"] += 1
+                if label == 'Positive': uni_stats[uni_id]['pos'] += 1
+                elif label == 'Neutral': uni_stats[uni_id]['neu'] += 1
+                elif label == 'Negative': uni_stats[uni_id]['neg'] += 1
+
+        result = []
+        # Map universities to regions for the UI
+        regions_map = {"UNILAG": "South West", "OAU": "South West", "University of Ibadan": "South West", "FUTA": "South West", "ABU": "North West", "UNN": "South East", "UNIBEN": "South South", "UNILORIN": "North Central"}
+        
+        for uni, stats in uni_stats.items():
+            total = stats["vol"]
+            if total > 0:
+                result.append({
+                    "name": uni,
+                    "volume": total,
+                    "positive": round((stats['pos']/total)*100),
+                    "neutral": round((stats['neu']/total)*100),
+                    "negative": round((stats['neg']/total)*100),
+                    "region": regions_map.get(uni, "Unknown"),
+                    "fill": "#f43f5e" if stats['neg'] >= stats['pos'] and stats['neg'] >= stats['neu'] else ("#10b981" if stats['pos'] > stats['neu'] else "#64748b")
+                })
+        return result
+    except Exception as e:
+        print(f"Error university analytics: {e}")
+        return []
 
 def get_topic_analytics():
     return [

@@ -11,6 +11,9 @@ class Settings(BaseSettings):
     APPWRITE_API_KEY: str = ""
     APPWRITE_DB_ID: str = "sentiment_db"
 
+    # AI Pipeline
+    GEMINI_API_KEY: str = ""
+
     # Celery & Redis Configuration
     REDIS_URL: str = "redis://redis:6379/0"
 

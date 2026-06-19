@@ -37,7 +37,7 @@ export default function ExportCenter() {
             <p className="text-3xl font-bold text-white mb-1">14.2 GB</p>
             <p className="text-sm text-zinc-500">Of 50 GB Quota</p>
             <div className="w-full bg-zinc-800 rounded-full h-1.5 mt-3">
-              <div className="bg-indigo-500 h-1.5 rounded-full" style={{ width: '28%' }}></div>
+              <div className="bg-indigo-500 h-1.5 rounded-full w-[28%]"></div>
             </div>
         </Card>
       </div>
