@@ -59,6 +59,7 @@ import Features from '../pages/public/Features';
 import Pricing from '../pages/public/Pricing';
 import Documentation from '../pages/public/Documentation';
 import Contact from '../pages/public/Contact';
+import Careers from '../pages/public/Careers';
 import NotFound from '../pages/public/NotFound';
 
 export const router = createBrowserRouter([
@@ -73,6 +74,7 @@ export const router = createBrowserRouter([
       { path: 'pricing', element: <Pricing /> },
       { path: 'docs', element: <Documentation /> },
       { path: 'contact', element: <Contact /> },
+      { path: 'careers', element: <Careers /> },
     ]
   },
   {
@@ -171,6 +173,7 @@ export const router = createBrowserRouter([
           { path: 'reports', element: <PublicReports /> },
           { path: 'profile', element: <ProfileSettings /> },
           { path: 'settings', element: <ProfileSettings /> }
+        ]
       }
     ],
   },
