@@ -9,7 +9,7 @@ const mockUniData = [
   { name: 'ABU', negative: 45, neutral: 40, positive: 15, volume: 9800, region: 'North West' },
   { name: 'UNIBEN', negative: 72, neutral: 18, positive: 10, volume: 12500, region: 'South South' },
   { name: 'UNN', negative: 50, neutral: 35, positive: 15, volume: 11200, region: 'South East' },
-  { name: 'UI', negative: 48, neutral: 30, positive: 22, volume: 14100, region: 'South West' },
+  { name: 'University of Ibadan', negative: 48, neutral: 30, positive: 22, volume: 14100, region: 'South West' },
   { name: 'UNILORIN', negative: 42, neutral: 38, positive: 20, volume: 10500, region: 'North Central' },
   { name: 'FUTA', negative: 60, neutral: 25, positive: 15, volume: 8400, region: 'South West' },
 ];

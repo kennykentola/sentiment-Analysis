@@ -59,7 +59,7 @@ export default function ViewerDashboard() {
     { name: 'UNILAG', posts: 4200 },
     { name: 'OAU', posts: 3100 },
     { name: 'ABU Zaria', posts: 2800 },
-    { name: 'UI', posts: 2100 },
+    { name: 'University of Ibadan', posts: 2100 },
     { name: 'UNN', posts: 1500 },
   ];
 

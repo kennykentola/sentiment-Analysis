@@ -10,7 +10,7 @@ const mockUniData = [
   { name: 'ABU', volume: 9800, sentiment: -5, stdDev: 8.4, region: 'North West' },
   { name: 'UNIBEN', volume: 12500, sentiment: -62, stdDev: 22.1, region: 'South South' },
   { name: 'UNN', volume: 11200, sentiment: -15, stdDev: 10.5, region: 'South East' },
-  { name: 'UI', volume: 14100, sentiment: -26, stdDev: 14.8, region: 'South West' },
+  { name: 'University of Ibadan', volume: 14100, sentiment: -26, stdDev: 14.8, region: 'South West' },
 ];
 
 export default function UniversityAnalysis() {
