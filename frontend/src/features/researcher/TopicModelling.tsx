@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, Cell } from 'recharts';
-import { Download, Filter, Settings, FileJson, Library } from 'lucide-react';
+import { Settings, FileJson } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 // LDA Topic Distribution Data
@@ -86,10 +86,10 @@ export default function TopicModelling() {
                 <RechartsTooltip 
                   cursor={{ fill: '#27272a' }}
                   contentStyle={{ backgroundColor: '#18181b', borderColor: '#27272a', borderRadius: '8px' }} 
-                  formatter={(value: number) => [(value * 100).toFixed(1) + '%', 'Corpus Weight']}
+                  formatter={(value: any) => [(value * 100).toFixed(1) + '%', 'Corpus Weight']}
                 />
                 <Bar dataKey="weight" radius={[0, 4, 4, 0]}>
-                  {ldaDistribution.map((entry, index) => (
+                  {ldaDistribution.map((_entry, index) => (
                     <Cell key={`cell-${index}`} fill={index === 0 ? '#f43f5e' : index === 1 ? '#f59e0b' : index === 2 ? '#10b981' : '#6366f1'} />
                   ))}
                 </Bar>

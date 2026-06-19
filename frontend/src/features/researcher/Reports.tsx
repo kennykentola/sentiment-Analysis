@@ -1,5 +1,5 @@
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { FileText, Download, FileJson, Copy, Bookmark, Search } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
+import { FileText, Download, Copy, Bookmark, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const mockReports = [

@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine, Legend } from 'recharts';
-import { Calendar, Filter, FileSpreadsheet, BrainCircuit, Maximize2 } from 'lucide-react';
+import { Filter, FileSpreadsheet, BrainCircuit, Maximize2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 // Researcher Data has more variables (Moving Averages, Variance)

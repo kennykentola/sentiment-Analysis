@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ZAxis, ReferenceLine, Cell } from 'recharts';
-import { Download, Calculator, Library, Building2 } from 'lucide-react';
+import { Download, Calculator, Building2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 // Researcher Data (X: Volume, Y: Sentiment, Z: Std Dev)

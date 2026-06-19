@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Save, Terminal, Play, Edit2, Trash2, Database, Clock } from 'lucide-react';
+import { Terminal, Play, Edit2, Trash2, Database, Clock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const mockQueries = [
