@@ -18,6 +18,27 @@ import UserManagement from '../features/super-admin/UserManagement';
 import ViewerDashboard from '../features/viewer/ViewerDashboard';
 import { ProtectedRoute } from '../components/auth/ProtectedRoute';
 
+// Analyst Pages
+import TopicModelling from '../features/analyst/TopicModelling';
+import TrendAnalysis from '../features/analyst/TrendAnalysis';
+import DataSources from '../features/analyst/DataSources';
+import CollectionJobs from '../features/analyst/CollectionJobs';
+import UniversityAnalysis from '../features/analyst/UniversityAnalysis';
+import RegionalAnalysis from '../features/analyst/RegionalAnalysis';
+import Search from '../features/analyst/Search';
+import Reports from '../features/analyst/Reports';
+
+// Viewer Pages
+import SentimentTrends from '../features/viewer/SentimentTrends';
+import UniversitiesViewer from '../features/viewer/Universities';
+import RegionalAnalysisViewer from '../features/viewer/RegionalAnalysis';
+import Topics from '../features/viewer/Topics';
+import PublicReports from '../features/viewer/PublicReports';
+
+// Shared Pages
+import ProfileSettings from '../features/shared/ProfileSettings';
+import Notifications from '../features/shared/Notifications';
+
 import { PublicLayout } from '../layouts/PublicLayout';
 import Register from '../pages/auth/Register';
 import ForgotPassword from '../pages/auth/ForgotPassword';
@@ -88,7 +109,18 @@ export const router = createBrowserRouter([
         element: <ProtectedRoute allowedRoles={['analyst', 'super_admin']} />,
         children: [
           { path: 'dashboard', element: <AnalystDashboard /> },
-          { path: 'analytics', element: <Analytics /> }
+          { path: 'analytics', element: <Analytics /> },
+          { path: 'topic-modelling', element: <TopicModelling /> },
+          { path: 'trend-analysis', element: <TrendAnalysis /> },
+          { path: 'data-sources', element: <DataSources /> },
+          { path: 'collection-jobs', element: <CollectionJobs /> },
+          { path: 'university-analysis', element: <UniversityAnalysis /> },
+          { path: 'regional-analysis', element: <RegionalAnalysis /> },
+          { path: 'search', element: <Search /> },
+          { path: 'reports', element: <Reports /> },
+          { path: 'notifications', element: <Notifications /> },
+          { path: 'profile', element: <ProfileSettings /> },
+          { path: 'settings', element: <ProfileSettings /> }
         ]
       },
 
@@ -108,7 +140,14 @@ export const router = createBrowserRouter([
         path: 'viewer', 
         element: <ProtectedRoute allowedRoles={['viewer', 'super_admin', 'admin', 'analyst', 'researcher']} />,
         children: [
-          { path: 'dashboard', element: <ViewerDashboard /> }
+          { path: 'dashboard', element: <ViewerDashboard /> },
+          { path: 'sentiment-trends', element: <SentimentTrends /> },
+          { path: 'universities', element: <UniversitiesViewer /> },
+          { path: 'regional-analysis', element: <RegionalAnalysisViewer /> },
+          { path: 'topics', element: <Topics /> },
+          { path: 'reports', element: <PublicReports /> },
+          { path: 'profile', element: <ProfileSettings /> },
+          { path: 'settings', element: <ProfileSettings /> }
         ]
       }
     ],
