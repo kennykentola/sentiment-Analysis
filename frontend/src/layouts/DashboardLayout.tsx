@@ -1,5 +1,5 @@
 import { Outlet, Link, Navigate } from 'react-router-dom';
-import { LayoutDashboard, Users, Activity, LogOut, Menu, X, Database, FileText, TrendingUp, MessageSquare, Clock, GraduationCap, MapPin, Search, Bell, User, Settings } from 'lucide-react';
+import { LayoutDashboard, Users, Activity, LogOut, Menu, X, Database, FileText, TrendingUp, MessageSquare, Clock, GraduationCap, MapPin, Search, Bell, User, Settings, Layers, Save, Download } from 'lucide-react';
 import { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 
@@ -104,13 +104,57 @@ export function DashboardLayout() {
             <LayoutDashboard size={18} />
             <span>Research Hub</span>
           </Link>
+          <Link onClick={() => setIsMobileMenuOpen(false)} to="/app/researcher/projects" className="flex items-center space-x-3 px-3 py-2 text-zinc-400 hover:bg-zinc-800 rounded-md text-sm font-medium transition-colors">
+            <Layers size={18} />
+            <span>Research Projects</span>
+          </Link>
           <Link onClick={() => setIsMobileMenuOpen(false)} to="/app/researcher/datasets" className="flex items-center space-x-3 px-3 py-2 text-zinc-400 hover:bg-zinc-800 rounded-md text-sm font-medium transition-colors">
             <Database size={18} />
-            <span>Dataset Library</span>
+            <span>Datasets</span>
+          </Link>
+          <Link onClick={() => setIsMobileMenuOpen(false)} to="/app/researcher/sentiment-analysis" className="flex items-center space-x-3 px-3 py-2 text-zinc-400 hover:bg-zinc-800 rounded-md text-sm font-medium transition-colors">
+            <Activity size={18} />
+            <span>Sentiment Analysis</span>
+          </Link>
+          <Link onClick={() => setIsMobileMenuOpen(false)} to="/app/researcher/topic-modelling" className="flex items-center space-x-3 px-3 py-2 text-zinc-400 hover:bg-zinc-800 rounded-md text-sm font-medium transition-colors">
+            <MessageSquare size={18} />
+            <span>Topic Modelling</span>
+          </Link>
+          <Link onClick={() => setIsMobileMenuOpen(false)} to="/app/researcher/trend-analysis" className="flex items-center space-x-3 px-3 py-2 text-zinc-400 hover:bg-zinc-800 rounded-md text-sm font-medium transition-colors">
+            <TrendingUp size={18} />
+            <span>Trend Analysis</span>
+          </Link>
+          <Link onClick={() => setIsMobileMenuOpen(false)} to="/app/researcher/university-analysis" className="flex items-center space-x-3 px-3 py-2 text-zinc-400 hover:bg-zinc-800 rounded-md text-sm font-medium transition-colors">
+            <GraduationCap size={18} />
+            <span>University Analysis</span>
+          </Link>
+          <Link onClick={() => setIsMobileMenuOpen(false)} to="/app/researcher/regional-analysis" className="flex items-center space-x-3 px-3 py-2 text-zinc-400 hover:bg-zinc-800 rounded-md text-sm font-medium transition-colors">
+            <MapPin size={18} />
+            <span>Regional Analysis</span>
           </Link>
           <Link onClick={() => setIsMobileMenuOpen(false)} to="/app/researcher/publications" className="flex items-center space-x-3 px-3 py-2 text-zinc-400 hover:bg-zinc-800 rounded-md text-sm font-medium transition-colors">
             <FileText size={18} />
             <span>Publications</span>
+          </Link>
+          <Link onClick={() => setIsMobileMenuOpen(false)} to="/app/researcher/reports" className="flex items-center space-x-3 px-3 py-2 text-zinc-400 hover:bg-zinc-800 rounded-md text-sm font-medium transition-colors">
+            <FileText size={18} />
+            <span>Reports</span>
+          </Link>
+          <Link onClick={() => setIsMobileMenuOpen(false)} to="/app/researcher/saved-queries" className="flex items-center space-x-3 px-3 py-2 text-zinc-400 hover:bg-zinc-800 rounded-md text-sm font-medium transition-colors">
+            <Save size={18} />
+            <span>Saved Queries</span>
+          </Link>
+          <Link onClick={() => setIsMobileMenuOpen(false)} to="/app/researcher/export-center" className="flex items-center space-x-3 px-3 py-2 text-zinc-400 hover:bg-zinc-800 rounded-md text-sm font-medium transition-colors">
+            <Download size={18} />
+            <span>Export Center</span>
+          </Link>
+          <Link onClick={() => setIsMobileMenuOpen(false)} to="/app/researcher/profile" className="flex items-center space-x-3 px-3 py-2 text-zinc-400 hover:bg-zinc-800 rounded-md text-sm font-medium transition-colors">
+            <User size={18} />
+            <span>Profile</span>
+          </Link>
+          <Link onClick={() => setIsMobileMenuOpen(false)} to="/app/researcher/settings" className="flex items-center space-x-3 px-3 py-2 text-zinc-400 hover:bg-zinc-800 rounded-md text-sm font-medium transition-colors">
+            <Settings size={18} />
+            <span>Settings</span>
           </Link>
         </>
       )}

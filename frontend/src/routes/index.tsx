@@ -14,6 +14,15 @@ import AdminDashboard from '../features/admin/AdminDashboard';
 import ResearcherDashboard from '../features/researcher/ResearcherDashboard';
 import DatasetLibrary from '../features/researcher/DatasetLibrary';
 import PublicationWorkspace from '../features/researcher/PublicationWorkspace';
+import ResearchProjects from '../features/researcher/ResearchProjects';
+import SentimentAnalysis from '../features/researcher/SentimentAnalysis';
+import TopicModellingResearcher from '../features/researcher/TopicModelling';
+import TrendAnalysisResearcher from '../features/researcher/TrendAnalysis';
+import UniversityAnalysisResearcher from '../features/researcher/UniversityAnalysis';
+import RegionalAnalysisResearcher from '../features/researcher/RegionalAnalysis';
+import ReportsResearcher from '../features/researcher/Reports';
+import SavedQueries from '../features/researcher/SavedQueries';
+import ExportCenter from '../features/researcher/ExportCenter';
 import UserManagement from '../features/super-admin/UserManagement';
 import ViewerDashboard from '../features/viewer/ViewerDashboard';
 import { ProtectedRoute } from '../components/auth/ProtectedRoute';
@@ -130,8 +139,19 @@ export const router = createBrowserRouter([
         element: <ProtectedRoute allowedRoles={['researcher', 'super_admin']} />,
         children: [
           { path: 'dashboard', element: <ResearcherDashboard /> },
+          { path: 'projects', element: <ResearchProjects /> },
           { path: 'datasets', element: <DatasetLibrary /> },
-          { path: 'publications', element: <PublicationWorkspace /> }
+          { path: 'sentiment-analysis', element: <SentimentAnalysis /> },
+          { path: 'topic-modelling', element: <TopicModellingResearcher /> },
+          { path: 'trend-analysis', element: <TrendAnalysisResearcher /> },
+          { path: 'university-analysis', element: <UniversityAnalysisResearcher /> },
+          { path: 'regional-analysis', element: <RegionalAnalysisResearcher /> },
+          { path: 'publications', element: <PublicationWorkspace /> },
+          { path: 'reports', element: <ReportsResearcher /> },
+          { path: 'saved-queries', element: <SavedQueries /> },
+          { path: 'export-center', element: <ExportCenter /> },
+          { path: 'profile', element: <ProfileSettings /> },
+          { path: 'settings', element: <ProfileSettings /> }
         ]
       },
 
