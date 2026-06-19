@@ -1,28 +1,31 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Cell } from 'recharts';
 import { Map, AlertTriangle } from 'lucide-react';
+import { useQuery } from '@tanstack/react-query';
+import { AnalyticsAPI } from '@/services/api';
 import { Button } from '@/components/ui/button';
 
-const mockRegionData = [
-  { region: 'South West', negative: 120, neutral: 50, positive: 30, fullMark: 150 },
-  { region: 'South South', negative: 98, neutral: 30, positive: 15, fullMark: 150 },
-  { region: 'South East', negative: 86, neutral: 40, positive: 20, fullMark: 150 },
-  { region: 'North West', negative: 65, neutral: 60, positive: 45, fullMark: 150 },
-  { region: 'North Central', negative: 70, neutral: 55, positive: 40, fullMark: 150 },
-  { region: 'North East', negative: 45, neutral: 40, positive: 35, fullMark: 150 },
-];
-
-const mockVolumeByState = [
-  { state: 'Lagos', volume: 45000, color: '#f43f5e' },
-  { state: 'Oyo', volume: 28000, color: '#f43f5e' },
-  { state: 'FCT Abuja', volume: 25000, color: '#f59e0b' },
-  { state: 'Osun', volume: 22000, color: '#f43f5e' },
-  { state: 'Edo', volume: 18000, color: '#f43f5e' },
-  { state: 'Rivers', volume: 15000, color: '#f59e0b' },
-  { state: 'Kaduna', volume: 12000, color: '#10b981' },
-];
+// Data fetched from API
 
 export default function RegionalAnalysis() {
+  const { data: rawRegionData, isLoading } = useQuery({
+    queryKey: ['regional'],
+    queryFn: AnalyticsAPI.getRegional
+  });
+
+  if (isLoading) {
+    return <div className="text-zinc-400 p-8">Loading regional distributions...</div>;
+  }
+
+  const mockRegionData = rawRegionData || [];
+
+  // Derive state volume mocks from region data for visual representation
+  const mockVolumeByState = mockRegionData.map((r: any) => ({
+    state: `${r.region} Hub`,
+    volume: r.value,
+    color: r.fill
+  })).sort((a: any, b: any) => b.volume - a.volume);
+
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -115,7 +118,7 @@ export default function RegionalAnalysis() {
                 />
                 <Bar dataKey="volume" radius={[0, 4, 4, 0]}>
                   {
-                    mockVolumeByState.map((entry, index) => (
+                    mockVolumeByState.map((entry: any, index: number) => (
                       <Cell key={`cell-${index}`} fill={entry.color} />
                     ))
                   }

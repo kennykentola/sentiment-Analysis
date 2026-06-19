@@ -1,19 +1,11 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { ScatterChart, Scatter, XAxis, YAxis, ZAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, Cell } from 'recharts';
 import { Download, Filter } from 'lucide-react';
+import { useQuery } from '@tanstack/react-query';
+import { AnalyticsAPI } from '@/services/api';
 import { Button } from '@/components/ui/button';
 
-// X: Topic similarity projection, Y: Sentiment Score, Z: Volume (size of bubble)
-const mockBubbleData = [
-  { name: 'Tuition Hike', x: 20, y: -80, z: 12000, color: '#f43f5e' },
-  { name: 'Hostel Fees', x: 80, y: -65, z: 8500, color: '#f43f5e' },
-  { name: 'Student Loans', x: 50, y: 30, z: 5400, color: '#14b8a6' },
-  { name: 'Strike Action', x: 10, y: -90, z: 15000, color: '#e11d48' },
-  { name: 'Scholarships', x: 90, y: 70, z: 3200, color: '#10b981' },
-  { name: 'ASUU', x: 30, y: -40, z: 9800, color: '#f59e0b' },
-  { name: 'Economy', x: 40, y: -75, z: 11000, color: '#ef4444' },
-  { name: 'Federal Govt', x: 70, y: -20, z: 7600, color: '#f59e0b' },
-];
+// Topics injected via API
 
 const topKeywords = [
   { word: "increase", count: 45210, sentiment: -0.8 },
@@ -24,6 +16,17 @@ const topKeywords = [
 ];
 
 export default function TopicModelling() {
+  const { data: mockBubbleData, isLoading } = useQuery({
+    queryKey: ['topics'],
+    queryFn: AnalyticsAPI.getTopics
+  });
+
+  if (isLoading) {
+    return <div className="text-zinc-400 p-8">Loading semantic topic clusters...</div>;
+  }
+
+  const dataToUse = mockBubbleData || [];
+
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -66,8 +69,8 @@ export default function TopicModelling() {
                   }}
                   labelFormatter={() => ''}
                 />
-                <Scatter name="Topics" data={mockBubbleData} fill="#8884d8">
-                  {mockBubbleData.map((entry, index) => (
+                <Scatter name="Topics" data={dataToUse} fill="#8884d8">
+                  {dataToUse.map((entry: any, index: number) => (
                     <Cell key={`cell-${index}`} fill={entry.color} fillOpacity={0.8} />
                   ))}
                 </Scatter>

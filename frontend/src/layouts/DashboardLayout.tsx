@@ -90,7 +90,7 @@ export function DashboardLayout() {
       )}
 
       {/* Researcher */}
-      {['super_admin', 'researcher'].includes(role) && (
+      {['researcher'].includes(role) && (
         <>
           <Link onClick={() => setIsMobileMenuOpen(false)} to="/app/researcher/dashboard" className="flex items-center space-x-3 px-3 py-2 text-zinc-400 hover:bg-zinc-800 rounded-md text-sm font-medium transition-colors">
             <LayoutDashboard size={18} />

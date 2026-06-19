@@ -1,19 +1,38 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ZAxis, Cell } from 'recharts';
 import { Map, Download, FileJson } from 'lucide-react';
+import { useQuery } from '@tanstack/react-query';
+import { AnalyticsAPI } from '@/services/api';
 import { Button } from '@/components/ui/button';
 
-// Researcher Geospatial Data (X: Per Capita Income, Y: Net Sentiment, Z: Volume)
-const mockRegionData = [
-  { region: 'South West', income: 450, sentiment: -55, volume: 45000 },
-  { region: 'South South', income: 380, sentiment: -42, volume: 18000 },
-  { region: 'South East', income: 340, sentiment: -36, volume: 16500 },
-  { region: 'North West', income: 210, sentiment: -12, volume: 12000 },
-  { region: 'North Central', income: 280, sentiment: -25, volume: 22000 },
-  { region: 'North East', income: 190, sentiment: -8, volume: 9500 },
-];
+// Data fetched dynamically via React Query
 
 export default function RegionalAnalysis() {
+  const { data: rawRegionData, isLoading } = useQuery({
+    queryKey: ['regional'],
+    queryFn: AnalyticsAPI.getRegional
+  });
+
+  if (isLoading) {
+    return <div className="text-zinc-400 p-8">Loading geospatial and demographic arrays...</div>;
+  }
+
+  const incomeMap: Record<string, number> = {
+    'South West': 450,
+    'South South': 380,
+    'South East': 340,
+    'North Central': 280,
+    'North West': 210,
+    'North East': 190
+  };
+
+  const mockRegionData = (rawRegionData || []).map((r: any) => ({
+    region: r.region,
+    income: incomeMap[r.region] || 300,
+    sentiment: r.positive - r.negative,
+    volume: r.value
+  }));
+
   return (
     <div className="space-y-6 animate-in fade-in duration-500 max-w-7xl mx-auto">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -76,7 +95,7 @@ export default function RegionalAnalysis() {
                 }}
               />
               <Scatter name="Regions" data={mockRegionData} fill="#8b5cf6">
-                {mockRegionData.map((entry, index) => (
+                {mockRegionData.map((entry: any, index: number) => (
                   <Cell key={`cell-${index}`} fill={entry.sentiment < -40 ? '#f43f5e' : entry.sentiment > -20 ? '#10b981' : '#f59e0b'} fillOpacity={0.8} />
                 ))}
               </Scatter>
@@ -97,7 +116,7 @@ export default function RegionalAnalysis() {
               </tr>
             </thead>
             <tbody className="divide-y divide-zinc-800/50">
-              {mockRegionData.map((region, i) => (
+              {mockRegionData.map((region: any, i: number) => (
                 <tr key={i} className="hover:bg-zinc-800/20 transition-colors">
                   <td className="px-6 py-4 font-sans font-medium text-white flex items-center">
                     <Map className="w-4 h-4 mr-2 text-zinc-500" />

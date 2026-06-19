@@ -1,16 +1,23 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import { Hash, Lightbulb } from 'lucide-react';
+import { useQuery } from '@tanstack/react-query';
+import { AnalyticsAPI } from '@/services/api';
 
-const mockTopics = [
-  { name: 'Tuition Fees', mentions: 125000, fill: '#f43f5e' },
-  { name: 'Hostel Accommodation', mentions: 84000, fill: '#f59e0b' },
-  { name: 'Student Union Strike', mentions: 62000, fill: '#10b981' },
-  { name: 'Cost of Living', mentions: 45000, fill: '#3b82f6' },
-  { name: 'Government Bursary', mentions: 28000, fill: '#8b5cf6' },
-];
+// Injected via API
 
 export default function Topics() {
+  const { data: mockTopics, isLoading } = useQuery({
+    queryKey: ['topics'],
+    queryFn: AnalyticsAPI.getTopics
+  });
+
+  if (isLoading) {
+    return <div className="text-zinc-400 p-8">Loading executive topic summaries...</div>;
+  }
+
+  const dataToUse = mockTopics || [];
+
   return (
     <div className="space-y-6 animate-in fade-in duration-500 max-w-7xl mx-auto">
       <div>
@@ -40,7 +47,7 @@ export default function Topics() {
         </CardHeader>
         <CardContent className="h-[450px]">
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={mockTopics} margin={{ top: 20, right: 30, left: 0, bottom: 5 }} layout="vertical">
+            <BarChart data={dataToUse} margin={{ top: 20, right: 30, left: 0, bottom: 5 }} layout="vertical">
               <CartesianGrid strokeDasharray="3 3" stroke="#27272a" horizontal={true} vertical={false} />
               <XAxis type="number" stroke="#a1a1aa" tickFormatter={(val) => `${(val / 1000)}k`} />
               <YAxis dataKey="name" type="category" stroke="#a1a1aa" tickLine={false} width={180} />
@@ -50,7 +57,7 @@ export default function Topics() {
                 formatter={(value: any) => [value.toLocaleString(), 'Total Mentions']}
               />
               <Bar dataKey="mentions" radius={[0, 4, 4, 0]}>
-                {mockTopics.map((entry, index) => (
+                {dataToUse.map((entry: any, index: number) => (
                   <Cell key={`cell-${index}`} fill={entry.fill} />
                 ))}
               </Bar>

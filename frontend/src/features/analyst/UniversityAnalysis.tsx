@@ -1,20 +1,24 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { Search, Building2, MapPin, TrendingDown } from 'lucide-react';
+import { useQuery } from '@tanstack/react-query';
+import { AnalyticsAPI } from '@/services/api';
 import { Button } from '@/components/ui/button';
 
-const mockUniData = [
-  { name: 'OAU', negative: 65, neutral: 25, positive: 10, volume: 15400, region: 'South West' },
-  { name: 'UNILAG', negative: 58, neutral: 22, positive: 20, volume: 18200, region: 'South West' },
-  { name: 'ABU', negative: 45, neutral: 40, positive: 15, volume: 9800, region: 'North West' },
-  { name: 'UNIBEN', negative: 72, neutral: 18, positive: 10, volume: 12500, region: 'South South' },
-  { name: 'UNN', negative: 50, neutral: 35, positive: 15, volume: 11200, region: 'South East' },
-  { name: 'University of Ibadan', negative: 48, neutral: 30, positive: 22, volume: 14100, region: 'South West' },
-  { name: 'UNILORIN', negative: 42, neutral: 38, positive: 20, volume: 10500, region: 'North Central' },
-  { name: 'FUTA', negative: 60, neutral: 25, positive: 15, volume: 8400, region: 'South West' },
-];
+// Data fetched dynamically via React Query
 
 export default function UniversityAnalysis() {
+  const { data: mockUniData, isLoading } = useQuery({
+    queryKey: ['universities'],
+    queryFn: AnalyticsAPI.getUniversities
+  });
+
+  if (isLoading) {
+    return <div className="text-zinc-400 p-8">Loading university statistics...</div>;
+  }
+
+  const dataToUse = mockUniData || [];
+
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -71,7 +75,7 @@ export default function UniversityAnalysis() {
         </CardHeader>
         <CardContent className="h-[450px] w-full pt-4">
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={mockUniData} margin={{ top: 20, right: 30, left: 0, bottom: 5 }}>
+            <BarChart data={dataToUse} margin={{ top: 20, right: 30, left: 0, bottom: 5 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="#27272a" vertical={false} />
               <XAxis dataKey="name" stroke="#a1a1aa" tickLine={false} axisLine={false} />
               <YAxis stroke="#a1a1aa" tickLine={false} axisLine={false} tickFormatter={(value) => `${value}%`} />
@@ -101,7 +105,7 @@ export default function UniversityAnalysis() {
               </tr>
             </thead>
             <tbody className="divide-y divide-zinc-800/50">
-              {mockUniData.map((uni, i) => {
+              {dataToUse.map((uni: any, i: number) => {
                 const net = uni.positive - uni.negative;
                 return (
                   <tr key={i} className="hover:bg-zinc-800/20 transition-colors">

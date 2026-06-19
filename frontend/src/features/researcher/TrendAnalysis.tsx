@@ -1,19 +1,36 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine, Legend } from 'recharts';
+import { useQuery } from '@tanstack/react-query';
+import { AnalyticsAPI } from '@/services/api';
 import { Filter, FileSpreadsheet, BrainCircuit, Maximize2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-// Researcher Data has more variables (Moving Averages, Variance)
-const mockTrendData = [
-  { date: '2024-01', sentiment: -12.5, ma: -10.2, variance: 4.2 },
-  { date: '2024-02', sentiment: -15.8, ma: -11.5, variance: 5.1 },
-  { date: '2024-03', sentiment: -22.4, ma: -14.2, variance: 8.4 }, // Strike starts
-  { date: '2024-04', sentiment: -45.6, ma: -25.8, variance: 15.6 }, // Fee hike announced
-  { date: '2024-05', sentiment: -38.2, ma: -32.4, variance: 12.1 },
-  { date: '2024-06', sentiment: -42.1, ma: -38.5, variance: 9.8 },
-];
+// We compute these statistically in the component from the raw API data.
 
 export default function TrendAnalysis() {
+  const { data: rawTrendData, isLoading } = useQuery({
+    queryKey: ['trends'],
+    queryFn: AnalyticsAPI.getTrends
+  });
+
+  if (isLoading) {
+    return <div className="text-zinc-400 p-8">Loading longitudinal data...</div>;
+  }
+
+  // Transform raw positive/negative to researcher statistical format
+  const mockTrendData = (rawTrendData || []).map((row: any, i: number, arr: any[]) => {
+    const rawSent = ((row.positive - row.negative) / 100); // normalized arbitrary value
+    const prev1 = i > 0 ? ((arr[i-1].positive - arr[i-1].negative) / 100) : rawSent;
+    const prev2 = i > 1 ? ((arr[i-2].positive - arr[i-2].negative) / 100) : prev1;
+    
+    return {
+      date: row.date,
+      sentiment: Number(rawSent.toFixed(2)),
+      ma: Number(((rawSent + prev1 + prev2) / 3).toFixed(2)),
+      variance: Number((Math.abs(rawSent - prev1) * 1.5).toFixed(2)) // mock variance
+    };
+  });
+
   return (
     <div className="space-y-6 animate-in fade-in duration-500 max-w-7xl mx-auto">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -104,7 +121,7 @@ export default function TrendAnalysis() {
               </tr>
             </thead>
             <tbody className="divide-y divide-zinc-800/50">
-              {mockTrendData.map((row, i) => {
+              {mockTrendData.map((row: any, i: number) => {
                 const prev = i > 0 ? mockTrendData[i - 1].sentiment : row.sentiment;
                 const delta = (row.sentiment - prev).toFixed(2);
                 return (

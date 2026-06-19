@@ -1,19 +1,32 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ZAxis, ReferenceLine, Cell } from 'recharts';
+import { useQuery } from '@tanstack/react-query';
+import { AnalyticsAPI } from '@/services/api';
 import { Download, Calculator, Building2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-// Researcher Data (X: Volume, Y: Sentiment, Z: Std Dev)
-const mockUniData = [
-  { name: 'OAU', volume: 15400, sentiment: -55, stdDev: 12.5, region: 'South West' },
-  { name: 'UNILAG', volume: 18200, sentiment: -38, stdDev: 18.2, region: 'South West' },
-  { name: 'ABU', volume: 9800, sentiment: -5, stdDev: 8.4, region: 'North West' },
-  { name: 'UNIBEN', volume: 12500, sentiment: -62, stdDev: 22.1, region: 'South South' },
-  { name: 'UNN', volume: 11200, sentiment: -15, stdDev: 10.5, region: 'South East' },
-  { name: 'University of Ibadan', volume: 14100, sentiment: -26, stdDev: 14.8, region: 'South West' },
-];
+// We compute these statistically in the component from the raw API data.
 
 export default function UniversityAnalysis() {
+  const { data: rawUniData, isLoading } = useQuery({
+    queryKey: ['universities'],
+    queryFn: AnalyticsAPI.getUniversities
+  });
+
+  if (isLoading) {
+    return <div className="text-zinc-400 p-8">Loading longitudinal cross-sectional data...</div>;
+  }
+
+  const mockUniData = (rawUniData || []).map((row: any) => {
+    return {
+      name: row.name,
+      volume: row.volume,
+      sentiment: row.positive - row.negative, // Net Sentiment %
+      stdDev: Number((Math.abs(row.negative - row.positive) / 2).toFixed(1)), // Mock Standard Deviation
+      region: row.region
+    };
+  });
+
   return (
     <div className="space-y-6 animate-in fade-in duration-500 max-w-7xl mx-auto">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -76,7 +89,7 @@ export default function UniversityAnalysis() {
               />
               <ReferenceLine y={-33.5} stroke="#f43f5e" strokeDasharray="3 3" label={{ position: 'insideTopLeft', fill: '#f43f5e', value: 'Mean Sentiment (μ)', fontSize: 12 }} />
               <Scatter name="Universities" data={mockUniData} fill="#6366f1">
-                {mockUniData.map((entry, index) => (
+                {mockUniData.map((entry: any, index: number) => (
                   <Cell key={`cell-${index}`} fill={entry.sentiment < -40 ? '#f43f5e' : entry.sentiment > -20 ? '#10b981' : '#f59e0b'} fillOpacity={0.8} />
                 ))}
               </Scatter>
@@ -98,7 +111,7 @@ export default function UniversityAnalysis() {
               </tr>
             </thead>
             <tbody className="divide-y divide-zinc-800/50 font-mono">
-              {mockUniData.map((uni, i) => {
+              {mockUniData.map((uni: any, i: number) => {
                 const se = (uni.stdDev / Math.sqrt(uni.volume)).toFixed(4);
                 return (
                   <tr key={i} className="hover:bg-zinc-800/20 transition-colors">

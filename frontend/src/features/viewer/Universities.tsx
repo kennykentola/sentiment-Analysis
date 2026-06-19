@@ -1,18 +1,28 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import { AlertTriangle, Lightbulb } from 'lucide-react';
+import { useQuery } from '@tanstack/react-query';
+import { AnalyticsAPI } from '@/services/api';
 
-const mockUniData = [
-  { name: 'UNILAG', negative: 85, threshold: 75 },
-  { name: 'University of Ibadan', negative: 65, threshold: 75 },
-  { name: 'OAU', negative: 78, threshold: 75 },
-  { name: 'ABU', negative: 45, threshold: 75 },
-  { name: 'UNIBEN', negative: 92, threshold: 75 },
-  { name: 'UNN', negative: 60, threshold: 75 },
-];
+// Computed dynamically from API
 
 export default function Universities() {
-  const criticalCount = mockUniData.filter(u => u.negative >= u.threshold).length;
+  const { data: rawUniData, isLoading } = useQuery({
+    queryKey: ['universities'],
+    queryFn: AnalyticsAPI.getUniversities
+  });
+
+  if (isLoading) {
+    return <div className="text-zinc-400 p-8">Loading executive university monitor...</div>;
+  }
+
+  const mockUniData = (rawUniData || []).map((row: any) => ({
+    name: row.name,
+    negative: row.negative, // Mocking API value, assume 0-100 scale here
+    threshold: 75
+  }));
+
+  const criticalCount = mockUniData.filter((u: any) => u.negative >= u.threshold).length;
 
   return (
     <div className="space-y-6 animate-in fade-in duration-500 max-w-7xl mx-auto">
@@ -62,7 +72,7 @@ export default function Universities() {
                 formatter={(value: any) => [`${value}%`, 'Negative Mentions']}
               />
               <Bar dataKey="negative" radius={[0, 4, 4, 0]}>
-                {mockUniData.map((entry, index) => (
+                {mockUniData.map((entry: any, index: number) => (
                   <Cell key={`cell-${index}`} fill={entry.negative >= entry.threshold ? '#e11d48' : '#3b82f6'} />
                 ))}
               </Bar>

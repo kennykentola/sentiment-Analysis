@@ -1,17 +1,27 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { Lightbulb, MapPin } from 'lucide-react';
+import { useQuery } from '@tanstack/react-query';
+import { AnalyticsAPI } from '@/services/api';
 
-const mockRegionData = [
-  { name: 'South West', value: 45000, fill: '#f43f5e' },
-  { name: 'South South', value: 32000, fill: '#f59e0b' },
-  { name: 'North West', value: 18000, fill: '#10b981' },
-  { name: 'North Central', value: 24000, fill: '#3b82f6' },
-  { name: 'South East', value: 28000, fill: '#8b5cf6' },
-  { name: 'North East', value: 12000, fill: '#64748b' },
-];
+// Data fetched via API
 
 export default function RegionalAnalysis() {
+  const { data: rawRegionData, isLoading } = useQuery({
+    queryKey: ['regional'],
+    queryFn: AnalyticsAPI.getRegional
+  });
+
+  if (isLoading) {
+    return <div className="text-zinc-400 p-8">Loading executive regional summaries...</div>;
+  }
+
+  const mockRegionData = (rawRegionData || []).map((r: any) => ({
+    name: r.region,
+    value: r.value,
+    fill: r.fill
+  }));
+
   return (
     <div className="space-y-6 animate-in fade-in duration-500 max-w-7xl mx-auto">
       <div>
@@ -54,7 +64,7 @@ export default function RegionalAnalysis() {
                 stroke="#18181b"
                 strokeWidth={2}
               >
-                {mockRegionData.map((entry, index) => (
+                {mockRegionData.map((entry: any, index: number) => (
                   <Cell key={`cell-${index}`} fill={entry.fill} />
                 ))}
               </Pie>
