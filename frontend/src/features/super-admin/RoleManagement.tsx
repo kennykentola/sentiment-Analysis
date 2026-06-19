@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Shield, Plus, Trash2, Edit2, ShieldAlert } from 'lucide-react';
+import { RolesAPI } from '@/services/api';
 
 interface Role {
   $id: string;
@@ -30,15 +31,7 @@ export default function RoleManagement() {
   const fetchRoles = async () => {
     try {
       setLoading(true);
-      const token = localStorage.getItem('appwrite_jwt');
-      const res = await fetch('https://sentiment-analysis-vc31.onrender.com/api/v1/roles', {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'X-Appwrite-JWT': token || ''
-        }
-      });
-      if (!res.ok) throw new Error("Failed to fetch roles");
-      const data = await res.json();
+      const data = await RolesAPI.getRoles();
       setRoles(data);
     } catch (err: any) {
       setError(err.message);
@@ -65,21 +58,10 @@ export default function RoleManagement() {
 
     try {
       setIsSubmitting(true);
-      const token = localStorage.getItem('appwrite_jwt');
-      const res = await fetch('https://sentiment-analysis-vc31.onrender.com/api/v1/roles', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-          'X-Appwrite-JWT': token || ''
-        },
-        body: JSON.stringify({
-          name: newRoleName,
-          permissions: selectedPermissions
-        })
+      await RolesAPI.createRole({
+        name: newRoleName,
+        permissions: selectedPermissions
       });
-
-      if (!res.ok) throw new Error("Failed to create role");
       
       // Reset form and fetch updated roles
       setNewRoleName("");
@@ -97,15 +79,7 @@ export default function RoleManagement() {
     if (!window.confirm("Are you sure you want to delete this role?")) return;
     
     try {
-      const token = localStorage.getItem('appwrite_jwt');
-      const res = await fetch(`https://sentiment-analysis-vc31.onrender.com/api/v1/roles/${roleId}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'X-Appwrite-JWT': token || ''
-        }
-      });
-      if (!res.ok) throw new Error("Failed to delete role");
+      await RolesAPI.deleteRole(roleId);
       await fetchRoles();
     } catch (err: any) {
       alert("Error deleting role: " + err.message);

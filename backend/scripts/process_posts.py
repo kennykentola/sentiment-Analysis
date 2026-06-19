@@ -26,8 +26,7 @@ def process_unscored_posts():
         # Fetch posts
         r_posts = requests.get(
             f"{base_url}/collections/SocialMediaPosts/documents", 
-            headers=headers, 
-            params={"queries[]": ['limit(100)']},
+            headers=headers,
             timeout=10
         )
         if r_posts.status_code != 200:
@@ -45,11 +44,11 @@ def process_unscored_posts():
             r_exist = requests.get(
                 f"{base_url}/collections/SentimentResults/documents",
                 headers=headers,
-                params={"queries[]": [f'equal("post_id", ["{post_id}"])']},
                 timeout=10
             )
             
-            existing = r_exist.json().get('documents', [])
+            existing_docs = r_exist.json().get('documents', [])
+            existing = [d for d in existing_docs if d.get('post_id') == post_id]
             
             if existing:
                 print(f"Post {post_id} already scored. Skipping.", flush=True)

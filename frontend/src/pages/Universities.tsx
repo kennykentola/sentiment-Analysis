@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { databases } from '@/services/appwrite';
+import { AnalyticsAPI } from '@/services/api';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 
@@ -8,10 +8,7 @@ const DB_ID = 'sentiment_db';
 export default function Universities() {
   const { data, isLoading } = useQuery({
     queryKey: ['universitiesData'],
-    queryFn: async () => {
-      const res = await databases.listDocuments(DB_ID, 'institutions');
-      return res.documents;
-    },
+    queryFn: AnalyticsAPI.getUniversities,
   });
 
   return (
@@ -38,27 +35,33 @@ export default function Universities() {
                 <TableCell colSpan={5} className="h-24 text-center text-zinc-500">Loading data...</TableCell>
               </TableRow>
             ) : (
-              data?.map((uni) => (
-                <TableRow key={uni.id} className="border-zinc-800 hover:bg-zinc-800/50 text-white">
+              data?.map((uni: any) => {
+                const isCritical = uni.negative > 60;
+                const isWarning = uni.negative > 40 && uni.negative <= 60;
+                const statusStr = isCritical ? 'Critical' : isWarning ? 'Warning' : 'Healthy';
+                
+                return (
+                <TableRow key={uni.name} className="border-zinc-800 hover:bg-zinc-800/50 text-white">
                   <TableCell className="font-medium">{uni.name}</TableCell>
-                  <TableCell className="text-center text-zinc-400">{uni.acronym}</TableCell>
+                  <TableCell className="text-center text-zinc-400">{uni.name}</TableCell>
                   <TableCell className="text-right">{uni.volume.toLocaleString()}</TableCell>
                   <TableCell className="text-right">
-                     <span className={uni.negativeScore > 70 ? 'text-rose-500 font-bold' : 'text-zinc-300'}>
-                        {uni.negativeScore}%
+                     <span className={uni.negative > 60 ? 'text-rose-500 font-bold' : 'text-zinc-300'}>
+                        {uni.negative}%
                      </span>
                   </TableCell>
                   <TableCell className="text-center">
                     <Badge variant="outline" className={
-                      uni.status === 'Critical' ? 'bg-rose-500/10 text-rose-500 border-rose-500/50' : 
-                      uni.status === 'Warning' ? 'bg-amber-500/10 text-amber-500 border-amber-500/50' : 
+                      isCritical ? 'bg-rose-500/10 text-rose-500 border-rose-500/50' : 
+                      isWarning ? 'bg-amber-500/10 text-amber-500 border-amber-500/50' : 
                       'bg-teal-500/10 text-teal-500 border-teal-500/50'
                     }>
-                      {uni.status}
+                      {statusStr}
                     </Badge>
                   </TableCell>
                 </TableRow>
-              ))
+                );
+              })
             )}
           </TableBody>
         </Table>

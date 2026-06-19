@@ -37,3 +37,14 @@ export const AnalyticsAPI = {
     getTopics: () => fetchWithAuth('/analytics/topics'),
     getRegional: () => fetchWithAuth('/analytics/regional'),
 };
+
+export const RolesAPI = {
+    getRoles: () => fetchWithAuth('/roles'),
+    createRole: (data: any) => fetchWithAuth('/roles', {
+        method: 'POST',
+        body: JSON.stringify(data)
+    }),
+    deleteRole: (id: string) => fetchWithAuth(`/roles/${id}`, {
+        method: 'DELETE'
+    })
+};
