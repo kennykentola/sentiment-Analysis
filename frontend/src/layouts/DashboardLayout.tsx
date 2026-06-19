@@ -1,5 +1,5 @@
 import { Outlet, Link, Navigate } from 'react-router-dom';
-import { LayoutDashboard, Users, Activity, LogOut, Menu, X, Database, FileText, TrendingUp, MessageSquare, Clock, GraduationCap, MapPin, Search, Bell, User, Settings, Layers, Save, Download } from 'lucide-react';
+import { LayoutDashboard, Users, Activity, LogOut, Menu, X, Database, FileText, TrendingUp, MessageSquare, Clock, GraduationCap, MapPin, Search, Bell, User, Settings, Layers, Save, Download, Shield } from 'lucide-react';
 import { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 
@@ -22,6 +22,10 @@ export function DashboardLayout() {
           <Link onClick={() => setIsMobileMenuOpen(false)} to="/app/super-admin/users" className="flex items-center space-x-3 px-3 py-2 text-zinc-400 hover:bg-zinc-800 rounded-md text-sm font-medium transition-colors">
             <Users size={18} />
             <span>Manage Users</span>
+          </Link>
+          <Link onClick={() => setIsMobileMenuOpen(false)} to="/app/super-admin/roles" className="flex items-center space-x-3 px-3 py-2 text-zinc-400 hover:bg-zinc-800 rounded-md text-sm font-medium transition-colors">
+            <Shield size={18} />
+            <span>Manage Roles</span>
           </Link>
         </>
       )}

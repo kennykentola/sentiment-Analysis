@@ -24,6 +24,7 @@ import ReportsResearcher from '../features/researcher/Reports';
 import SavedQueries from '../features/researcher/SavedQueries';
 import ExportCenter from '../features/researcher/ExportCenter';
 import UserManagement from '../features/super-admin/UserManagement';
+import RoleManagement from '../features/super-admin/RoleManagement';
 import ViewerDashboard from '../features/viewer/ViewerDashboard';
 import { ProtectedRoute } from '../components/auth/ProtectedRoute';
 
@@ -98,7 +99,8 @@ export const router = createBrowserRouter([
         element: <ProtectedRoute allowedRoles={['super_admin']} />,
         children: [
           { path: 'dashboard', element: <SuperAdminDashboard /> },
-          { path: 'users', element: <UserManagement /> }
+          { path: 'users', element: <UserManagement /> },
+          { path: 'roles', element: <RoleManagement /> }
         ]
       },
       
