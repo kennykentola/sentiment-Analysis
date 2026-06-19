@@ -3,8 +3,7 @@ import re
 import json
 from google import genai
 from pydantic import BaseModel, Field
-from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.decomposition import LatentDirichletAllocation
+
 
 class SentimentResult(BaseModel):
     score: float = Field(description="A numeric score between -1.0 (extremely negative) and 1.0 (extremely positive)")
@@ -66,6 +65,9 @@ class NLPProcessor:
         """
         if not texts or len(texts) < 5:
             return []
+
+        from sklearn.feature_extraction.text import CountVectorizer
+        from sklearn.decomposition import LatentDirichletAllocation
 
         # Remove very common words + school-specific stop words
         custom_stop_words = [

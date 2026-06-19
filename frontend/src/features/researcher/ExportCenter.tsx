@@ -18,7 +18,8 @@ export default function ExportCenter() {
       setIsExporting(true);
       const token = localStorage.getItem('appwrite_jwt');
       
-      const response = await fetch('https://sentiment-analysis-vc31.onrender.com/api/v1/datasets/export', {
+      const { API_BASE_URL } = await import('@/services/api');
+      const response = await fetch(`${API_BASE_URL}/datasets/export`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'X-Appwrite-JWT': token || ''

@@ -69,7 +69,7 @@ export default function RegionalAnalysis() {
         <Card className="bg-zinc-900 border-zinc-800 text-white p-6 rounded-xl bg-indigo-600/10 border-indigo-500/20">
             <h3 className="text-indigo-300 text-sm font-medium mb-2">Generate Report</h3>
             <p className="text-sm text-indigo-100/70 mb-3">Download full geographical breakdown.</p>
-            <Button size="sm" className="w-full bg-indigo-600 hover:bg-indigo-700 text-white">
+            <Button size="sm" className="w-full bg-indigo-600 hover:bg-indigo-700 text-white" onClick={() => window.print()}>
               Export PDF
             </Button>
         </Card>

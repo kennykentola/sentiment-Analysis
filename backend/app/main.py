@@ -1,3 +1,7 @@
+import platform
+import collections
+platform.uname = lambda: collections.namedtuple('uname_result', ['system', 'node', 'release', 'version', 'machine', 'processor'])('Windows', 'User', '10', '10.0.19041', 'AMD64', 'AMD64')
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings

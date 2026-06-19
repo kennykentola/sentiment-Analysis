@@ -49,7 +49,16 @@ export default function TrendAnalysis() {
             <BrainCircuit className="mr-2 h-4 w-4" />
             Run ML Smoothing
           </Button>
-          <Button className="bg-indigo-600 hover:bg-indigo-700 text-white">
+          <Button className="bg-indigo-600 hover:bg-indigo-700 text-white" onClick={() => {
+            const csv = mockTrendData.map((r: any) => `${r.date},${r.sentiment},${r.ma},${r.variance}`).join('\n');
+            const blob = new Blob(['date,sentiment,ma,variance\n' + csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'trend_analysis.csv';
+            a.click();
+            window.URL.revokeObjectURL(url);
+          }}>
             <FileSpreadsheet className="mr-2 h-4 w-4" />
             Export CSV
           </Button>

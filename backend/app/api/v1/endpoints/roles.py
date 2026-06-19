@@ -1,13 +1,19 @@
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException
 from typing import List, Dict, Any
 import uuid
+import requests
 
 from app.api.deps import RequireRole
 from app.core.config import settings
-from app.repositories.appwrite_client import db
-from appwrite.query import Query as AppwriteQuery
 
 router = APIRouter()
+
+def get_headers():
+    return {
+        "X-Appwrite-Project": settings.APPWRITE_PROJECT_ID,
+        "X-Appwrite-Key": settings.APPWRITE_API_KEY,
+        "Content-Type": "application/json"
+    }
 
 @router.get("/", response_model=List[Dict[str, Any]])
 async def get_roles(
@@ -17,12 +23,10 @@ async def get_roles(
     Get all custom roles. Only accessible by Super Admin.
     """
     try:
-        response = db.list_documents(
-            database_id=settings.APPWRITE_DB_ID,
-            collection_id="Roles",
-            queries=[AppwriteQuery.limit(100)]
-        )
-        return response.get("documents", [])
+        url = f"{settings.APPWRITE_ENDPOINT}/databases/{settings.APPWRITE_DB_ID}/collections/Roles/documents"
+        response = requests.get(url, headers=get_headers())
+        response.raise_for_status()
+        return response.json().get("documents", [])
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to fetch roles: {str(e)}")
 
@@ -37,17 +41,18 @@ async def create_role(
     """
     try:
         doc_id = str(uuid.uuid4()).replace('-', '')[:20]
-        response = db.create_document(
-            database_id=settings.APPWRITE_DB_ID,
-            collection_id="Roles",
-            document_id=doc_id,
-            data={
+        url = f"{settings.APPWRITE_ENDPOINT}/databases/{settings.APPWRITE_DB_ID}/collections/Roles/documents"
+        payload = {
+            "documentId": doc_id,
+            "data": {
                 "name": role_data.get("name"),
                 "permissions": role_data.get("permissions", [])
             },
-            permissions=['read("any")', 'update("any")', 'delete("any")']
-        )
-        return response
+            "permissions": ['read("any")', 'update("any")', 'delete("any")']
+        }
+        response = requests.post(url, headers=get_headers(), json=payload)
+        response.raise_for_status()
+        return response.json()
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to create role: {str(e)}")
 
@@ -61,11 +66,9 @@ async def delete_role(
     Delete a custom role. Only accessible by Super Admin.
     """
     try:
-        db.delete_document(
-            database_id=settings.APPWRITE_DB_ID,
-            collection_id="Roles",
-            document_id=role_id
-        )
+        url = f"{settings.APPWRITE_ENDPOINT}/databases/{settings.APPWRITE_DB_ID}/collections/Roles/documents/{role_id}"
+        response = requests.delete(url, headers=get_headers())
+        response.raise_for_status()
         return {"status": "success", "message": f"Role {role_id} deleted."}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to delete role: {str(e)}")

@@ -130,8 +130,7 @@ export default function RoleManagement() {
               </button>
             </div>
             
-            <h3 className="text-xl font-bold text-white mb-1">{role.name}</h3>
-            <p className="text-xs text-zinc-500 mb-4">ID: {role.$id}</p>
+            <h3 className="text-xl font-bold text-white mb-4">{role.name}</h3>
             
             <div className="space-y-2">
               <h4 className="text-sm font-semibold text-zinc-400 uppercase tracking-wider">Permissions</h4>
