@@ -1,5 +1,5 @@
 import { Outlet, Link, Navigate } from 'react-router-dom';
-import { LayoutDashboard, Users, Activity, LogOut, Menu, X } from 'lucide-react';
+import { LayoutDashboard, Users, Activity, LogOut, Menu, X, Database, FileText } from 'lucide-react';
 import { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 
@@ -55,10 +55,20 @@ export function DashboardLayout() {
 
       {/* Researcher */}
       {['super_admin', 'researcher'].includes(role) && (
-        <Link onClick={() => setIsMobileMenuOpen(false)} to="/app/researcher/dashboard" className="flex items-center space-x-3 px-3 py-2 text-zinc-400 hover:bg-zinc-800 rounded-md text-sm font-medium transition-colors">
-          <LayoutDashboard size={18} />
-          <span>Research Hub</span>
-        </Link>
+        <>
+          <Link onClick={() => setIsMobileMenuOpen(false)} to="/app/researcher/dashboard" className="flex items-center space-x-3 px-3 py-2 text-zinc-400 hover:bg-zinc-800 rounded-md text-sm font-medium transition-colors">
+            <LayoutDashboard size={18} />
+            <span>Research Hub</span>
+          </Link>
+          <Link onClick={() => setIsMobileMenuOpen(false)} to="/app/researcher/datasets" className="flex items-center space-x-3 px-3 py-2 text-zinc-400 hover:bg-zinc-800 rounded-md text-sm font-medium transition-colors">
+            <Database size={18} />
+            <span>Dataset Library</span>
+          </Link>
+          <Link onClick={() => setIsMobileMenuOpen(false)} to="/app/researcher/publications" className="flex items-center space-x-3 px-3 py-2 text-zinc-400 hover:bg-zinc-800 rounded-md text-sm font-medium transition-colors">
+            <FileText size={18} />
+            <span>Publications</span>
+          </Link>
+        </>
       )}
 
       {/* Viewer */}
@@ -90,7 +100,7 @@ export function DashboardLayout() {
           <aside className="relative w-64 bg-zinc-900 h-full border-r border-zinc-800 flex flex-col">
             <div className="h-16 flex items-center justify-between px-6 border-b border-zinc-800">
               <span className="font-bold text-lg tracking-tight">Sentiment Hub</span>
-              <button onClick={() => setIsMobileMenuOpen(false)} className="text-zinc-400 hover:text-white">
+              <button title="Close Menu" onClick={() => setIsMobileMenuOpen(false)} className="text-zinc-400 hover:text-white">
                 <X size={20} />
               </button>
             </div>
@@ -104,6 +114,7 @@ export function DashboardLayout() {
       <main className="flex-1 flex flex-col min-w-0">
         <header className="h-16 border-b border-zinc-800 flex items-center justify-between md:justify-end px-4 md:px-6 bg-zinc-950">
           <button 
+            title="Open Menu"
             className="md:hidden text-zinc-400 hover:text-white"
             onClick={() => setIsMobileMenuOpen(true)}
           >

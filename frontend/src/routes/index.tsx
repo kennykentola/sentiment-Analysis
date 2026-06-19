@@ -12,6 +12,8 @@ import AnalystDashboard from '../features/analyst/AnalystDashboard';
 import SuperAdminDashboard from '../features/super-admin/SuperAdminDashboard';
 import AdminDashboard from '../features/admin/AdminDashboard';
 import ResearcherDashboard from '../features/researcher/ResearcherDashboard';
+import DatasetLibrary from '../features/researcher/DatasetLibrary';
+import PublicationWorkspace from '../features/researcher/PublicationWorkspace';
 import UserManagement from '../features/super-admin/UserManagement';
 import ViewerDashboard from '../features/viewer/ViewerDashboard';
 import { ProtectedRoute } from '../components/auth/ProtectedRoute';
@@ -95,7 +97,9 @@ export const router = createBrowserRouter([
         path: 'researcher', 
         element: <ProtectedRoute allowedRoles={['researcher', 'super_admin']} />,
         children: [
-          { path: 'dashboard', element: <ResearcherDashboard /> }
+          { path: 'dashboard', element: <ResearcherDashboard /> },
+          { path: 'datasets', element: <DatasetLibrary /> },
+          { path: 'publications', element: <PublicationWorkspace /> }
         ]
       },
 
