@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Play, Pause, AlertTriangle, Clock, Server, CheckCircle2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
