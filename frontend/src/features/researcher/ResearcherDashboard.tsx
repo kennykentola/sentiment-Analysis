@@ -84,7 +84,7 @@ export default function ResearcherDashboard() {
                   contentStyle={{ backgroundColor: '#18181b', borderColor: '#27272a', color: '#fff', borderRadius: '0.5rem' }}
                 />
                 <Bar dataKey="count" radius={[0, 4, 4, 0]}>
-                  {topicData.map((entry, index) => (
+                  {topicData.map((_, index) => (
                     <Cell key={`cell-${index}`} fill={barColors[index % barColors.length]} />
                   ))}
                 </Bar>

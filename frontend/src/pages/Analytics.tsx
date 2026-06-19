@@ -44,7 +44,7 @@ export default function Analytics() {
                     paddingAngle={5}
                     dataKey="value"
                   >
-                    {data?.distribution.map((entry, index) => (
+                    {data?.distribution.map((entry: any, index: number) => (
                       <Cell key={`cell-${index}`} fill={entry.fill} stroke="rgba(0,0,0,0)" />
                     ))}
                   </Pie>

@@ -35,7 +35,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   async function checkUser() {
     try {
       const currentAccount = await account.get();
-      setUser(currentAccount);
+      setUser(currentAccount as unknown as AuthUser);
     } catch (error) {
       setUser(null);
     } finally {
