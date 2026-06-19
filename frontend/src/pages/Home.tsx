@@ -108,8 +108,8 @@ export default function Home() {
                 {/* Main Chart Area */}
                 <div className="flex-1 bg-zinc-900/40 rounded-xl border border-zinc-800/50 p-4 flex flex-col">
                   <div className="flex justify-between items-center mb-4">
-                    <div className="h-3 w-40 bg-zinc-700 rounded-sm"></div>
-                    <div className="h-3 w-16 bg-zinc-700 rounded-sm"></div>
+                    <div className="text-sm font-medium text-zinc-300">Sentiment Trend (Past 30 Days)</div>
+                    <div className="text-xs text-zinc-500 font-mono">Live Sync</div>
                   </div>
                   {/* Fake Bar Chart */}
                   <div className="flex-1 flex items-end gap-2 md:gap-4 justify-between mt-4">
