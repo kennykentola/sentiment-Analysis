@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { Building2, Users, Network, TrendingDown, ArrowUpRight, CheckCircle2, AlertCircle, XCircle, Loader2, Play } from 'lucide-react';
+import { Building2, Users, Network, TrendingDown, CheckCircle2, AlertCircle, XCircle, Loader2, Play } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { account } from '@/services/appwrite';
