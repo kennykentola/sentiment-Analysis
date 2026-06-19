@@ -90,7 +90,7 @@ export function DashboardLayout() {
           <aside className="relative w-64 bg-zinc-900 h-full border-r border-zinc-800 flex flex-col">
             <div className="h-16 flex items-center justify-between px-6 border-b border-zinc-800">
               <span className="font-bold text-lg tracking-tight">Sentiment Hub</span>
-              <button onClick={() => setIsMobileMenuOpen(false)} className="text-zinc-400 hover:text-white">
+              <button onClick={() => setIsMobileMenuOpen(false)} className="text-zinc-400 hover:text-white" title="Close Menu" aria-label="Close Menu">
                 <X size={20} />
               </button>
             </div>
@@ -106,6 +106,8 @@ export function DashboardLayout() {
           <button 
             className="md:hidden text-zinc-400 hover:text-white"
             onClick={() => setIsMobileMenuOpen(true)}
+            title="Open Menu"
+            aria-label="Open Menu"
           >
             <Menu size={24} />
           </button>
