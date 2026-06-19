@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Activity, Database, ShieldCheck, Globe, MessageSquareQuote } from 'lucide-react';
+import { Activity, Database, ShieldCheck, Globe, MessageSquareQuote, TrendingDown, CheckCircle2 } from 'lucide-react';
 
 export default function Home() {
   return (
@@ -66,22 +66,63 @@ export default function Home() {
 
           <div className="rounded-2xl border border-zinc-800 bg-zinc-900/50 p-2 md:p-4 overflow-hidden shadow-2xl shadow-indigo-500/10">
             <div className="rounded-xl border border-zinc-800 bg-[#09090b] aspect-video relative overflow-hidden flex items-center justify-center">
-              {/* Mock Dashboard UI */}
+              {/* Enhanced Mock Dashboard UI */}
               <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-5"></div>
-              <div className="p-8 w-full h-full flex flex-col">
-                <div className="flex justify-between items-center border-b border-zinc-800 pb-4 mb-4">
-                  <div className="h-6 w-32 bg-zinc-800 rounded animate-pulse"></div>
-                  <div className="flex gap-2">
-                    <div className="h-6 w-16 bg-zinc-800 rounded"></div>
-                    <div className="h-6 w-16 bg-indigo-600/50 rounded"></div>
+              <div className="p-4 md:p-8 w-full h-full flex flex-col relative z-10">
+                {/* Header */}
+                <div className="flex justify-between items-center border-b border-zinc-800/50 pb-4 mb-4 md:mb-6">
+                  <div className="flex items-center gap-3">
+                    <div className="h-8 w-8 bg-indigo-500/20 rounded-lg flex items-center justify-center border border-indigo-500/30">
+                      <Activity size={16} className="text-indigo-400" />
+                    </div>
+                    <div>
+                      <div className="h-4 w-32 bg-zinc-200 rounded-sm mb-1"></div>
+                      <div className="h-2 w-20 bg-zinc-500 rounded-sm"></div>
+                    </div>
+                  </div>
+                  <div className="flex gap-2 hidden md:flex">
+                    <div className="h-8 w-24 bg-zinc-800/50 rounded-md border border-zinc-700/50"></div>
+                    <div className="h-8 w-24 bg-indigo-600 rounded-md shadow-lg shadow-indigo-500/20"></div>
                   </div>
                 </div>
-                <div className="grid grid-cols-3 gap-4 mb-4">
-                  <div className="h-24 bg-zinc-800/50 rounded-lg border border-zinc-800"></div>
-                  <div className="h-24 bg-zinc-800/50 rounded-lg border border-zinc-800"></div>
-                  <div className="h-24 bg-zinc-800/50 rounded-lg border border-zinc-800"></div>
+
+                {/* KPIs */}
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+                  <div className="bg-zinc-900/60 rounded-xl border border-zinc-800/50 p-4">
+                    <div className="text-xs text-zinc-400 mb-2">Total Sentiment Volume</div>
+                    <div className="text-2xl font-bold text-white mb-1">124,592</div>
+                    <div className="text-xs text-emerald-400 flex items-center gap-1"><TrendingDown size={12} /> +12.5% this week</div>
+                  </div>
+                  <div className="bg-zinc-900/60 rounded-xl border border-zinc-800/50 p-4">
+                    <div className="text-xs text-zinc-400 mb-2">Negative Spike (OAU)</div>
+                    <div className="text-2xl font-bold text-rose-400 mb-1">45.2%</div>
+                    <div className="text-xs text-rose-500 flex items-center gap-1">Critical threshold reached</div>
+                  </div>
+                  <div className="bg-zinc-900/60 rounded-xl border border-zinc-800/50 p-4 hidden sm:block">
+                    <div className="text-xs text-zinc-400 mb-2">Ingestion Status</div>
+                    <div className="text-2xl font-bold text-white mb-1">Active</div>
+                    <div className="text-xs text-emerald-400 flex items-center gap-1"><CheckCircle2 size={12} /> All nodes operational</div>
+                  </div>
                 </div>
-                <div className="flex-1 bg-zinc-800/30 rounded-lg border border-zinc-800"></div>
+
+                {/* Main Chart Area */}
+                <div className="flex-1 bg-zinc-900/40 rounded-xl border border-zinc-800/50 p-4 flex flex-col">
+                  <div className="flex justify-between items-center mb-4">
+                    <div className="h-3 w-40 bg-zinc-700 rounded-sm"></div>
+                    <div className="h-3 w-16 bg-zinc-700 rounded-sm"></div>
+                  </div>
+                  {/* Fake Bar Chart */}
+                  <div className="flex-1 flex items-end gap-2 md:gap-4 justify-between mt-4">
+                    {[35, 45, 30, 65, 85, 40, 50, 75, 60, 45, 90, 55].map((height, i) => (
+                      <div key={i} className="w-full relative group">
+                        <div 
+                          className={`w-full rounded-t-sm transition-all duration-1000 ease-in-out ${i === 4 || i === 10 ? 'bg-rose-500/80 shadow-[0_0_15px_rgba(244,63,94,0.4)]' : 'bg-indigo-500/40 hover:bg-indigo-500/60'}`}
+                          style={{ height: `${height}%` }}
+                        ></div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
             </div>
           </div>
