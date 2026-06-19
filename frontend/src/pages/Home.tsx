@@ -113,11 +113,10 @@ export default function Home() {
                   </div>
                   {/* Fake Bar Chart */}
                   <div className="flex-1 flex items-end gap-2 md:gap-4 justify-between mt-4">
-                    {[35, 45, 30, 65, 85, 40, 50, 75, 60, 45, 90, 55].map((height, i) => (
+                    {['h-[35%]', 'h-[45%]', 'h-[30%]', 'h-[65%]', 'h-[85%]', 'h-[40%]', 'h-[50%]', 'h-[75%]', 'h-[60%]', 'h-[45%]', 'h-[90%]', 'h-[55%]'].map((heightClass, i) => (
                       <div key={i} className="w-full relative group">
                         <div 
-                          className={`w-full rounded-t-sm transition-all duration-1000 ease-in-out ${i === 4 || i === 10 ? 'bg-rose-500/80 shadow-[0_0_15px_rgba(244,63,94,0.4)]' : 'bg-indigo-500/40 hover:bg-indigo-500/60'}`}
-                          style={{ height: `${height}%` }}
+                          className={`w-full rounded-t-sm transition-all duration-1000 ease-in-out ${heightClass} ${i === 4 || i === 10 ? 'bg-rose-500/80 shadow-[0_0_15px_rgba(244,63,94,0.4)]' : 'bg-indigo-500/40 hover:bg-indigo-500/60'}`}
                         ></div>
                       </div>
                     ))}
