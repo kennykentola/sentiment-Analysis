@@ -59,7 +59,7 @@ export default function Universities() {
               <Tooltip 
                 cursor={{ fill: '#27272a' }}
                 contentStyle={{ backgroundColor: '#18181b', borderColor: '#27272a', borderRadius: '0.5rem', color: '#fff' }}
-                formatter={(value: number) => [`${value}%`, 'Negative Mentions']}
+                formatter={(value: any) => [`${value}%`, 'Negative Mentions']}
               />
               <Bar dataKey="negative" radius={[0, 4, 4, 0]}>
                 {mockUniData.map((entry, index) => (

@@ -47,7 +47,7 @@ export default function Topics() {
               <Tooltip 
                 cursor={{ fill: '#27272a' }}
                 contentStyle={{ backgroundColor: '#18181b', borderColor: '#27272a', borderRadius: '0.5rem', color: '#fff' }}
-                formatter={(value: number) => [value.toLocaleString(), 'Total Mentions']}
+                formatter={(value: any) => [value.toLocaleString(), 'Total Mentions']}
               />
               <Bar dataKey="mentions" radius={[0, 4, 4, 0]}>
                 {mockTopics.map((entry, index) => (
