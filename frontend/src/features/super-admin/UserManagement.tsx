@@ -8,7 +8,8 @@ import { account, storage } from '@/services/appwrite';
 
 const fetchUsers = async () => {
   const session = await account.createJWT();
-  const response = await fetch('http://localhost:8000/api/v1/users/', {
+  const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://sentiment-analysis-vc31.onrender.com/api/v1';
+  const response = await fetch(`${API_BASE_URL}/users/`, {
     headers: { 'x-appwrite-jwt': session.jwt }
   });
   if (!response.ok) throw new Error("Failed to fetch users");
@@ -17,7 +18,8 @@ const fetchUsers = async () => {
 
 const updateUserRole = async ({ userId, role }: { userId: string, role: string }) => {
   const session = await account.createJWT();
-  const response = await fetch(`http://localhost:8000/api/v1/users/${userId}/role`, {
+  const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://sentiment-analysis-vc31.onrender.com/api/v1';
+  const response = await fetch(`${API_BASE_URL}/users/${userId}/role`, {
     method: 'PUT',
     headers: { 'x-appwrite-jwt': session.jwt, 'Content-Type': 'application/json' },
     body: JSON.stringify({ role })

@@ -2,20 +2,11 @@ from fastapi import APIRouter, HTTPException, Depends
 from pydantic import BaseModel, Field
 from app.api.deps import RequireRole
 from app.core.config import settings
-from appwrite.client import Client
-from appwrite.services.users import Users
-from appwrite.id import ID
-from appwrite.exception import AppwriteException
+import requests
 
 router = APIRouter()
 
-# Initialize Admin SDK Client (requires APPWRITE_API_KEY)
-admin_client = Client()
-admin_client.set_endpoint(settings.APPWRITE_ENDPOINT)
-admin_client.set_project(settings.APPWRITE_PROJECT_ID)
-admin_client.set_key(settings.APPWRITE_API_KEY)
-
-admin_users = Users(admin_client)
+# Using requests to bypass SDK hang
 
 class CreateUserRequest(BaseModel):
     name: str
@@ -30,25 +21,37 @@ async def create_user(payload: CreateUserRequest):
     Only accessible by Super Admins.
     """
     try:
-        # Create the user in Appwrite
-        user = admin_users.create(
-            user_id=ID.unique(),
-            email=payload.email,
-            password=payload.password,
-            name=payload.name
-        )
+        # Create the user via REST
+        import uuid
+        user_id = str(uuid.uuid4()).replace('-', '')[:20]
+        url = f"{settings.APPWRITE_ENDPOINT}/users"
+        headers = {
+            "X-Appwrite-Project": settings.APPWRITE_PROJECT_ID,
+            "X-Appwrite-Key": settings.APPWRITE_API_KEY,
+            "Content-Type": "application/json"
+        }
+        payload_data = {
+            "userId": user_id,
+            "email": payload.email,
+            "password": payload.password,
+            "name": payload.name
+        }
+        res = requests.post(url, headers=headers, json=payload_data)
+        if res.status_code not in (200, 201):
+            raise HTTPException(status_code=400, detail=res.text)
         
-        # We store the role in Appwrite User Labels to enforce RBAC easily
-        # Wait, the frontend checks user.prefs.role, so let's set prefs.
+        user = res.json()
+        
+        # Update prefs
         prefs = {"role": payload.role}
-        admin_users.update_prefs(user_id=user["$id"], prefs=prefs)
+        prefs_url = f"{settings.APPWRITE_ENDPOINT}/users/{user_id}/prefs"
+        requests.patch(prefs_url, headers=headers, json=prefs)
         
-        # Also assign it as a label for backend deps
-        admin_users.update_labels(user_id=user["$id"], labels=[payload.role])
+        # Update labels
+        labels_url = f"{settings.APPWRITE_ENDPOINT}/users/{user_id}/labels"
+        requests.put(labels_url, headers=headers, json={"labels": [payload.role]})
         
-        return {"status": "success", "user_id": user["$id"], "message": f"User {payload.name} created with role {payload.role}"}
-    except AppwriteException as e:
-        raise HTTPException(status_code=400, detail=str(e))
+        return {"status": "success", "user_id": user_id, "message": f"User {payload.name} created with role {payload.role}"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
@@ -58,10 +61,17 @@ async def list_users():
     List all users in the system.
     """
     try:
-        response = admin_users.list()
-        return response
-    except AppwriteException as e:
-        raise HTTPException(status_code=400, detail=str(e))
+        url = f"{settings.APPWRITE_ENDPOINT}/users"
+        headers = {
+            "X-Appwrite-Project": settings.APPWRITE_PROJECT_ID,
+            "X-Appwrite-Key": settings.APPWRITE_API_KEY
+        }
+        res = requests.get(url, headers=headers)
+        if res.status_code == 200:
+            return res.json()
+        return {"users": []}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 class UpdateRoleRequest(BaseModel):
     role: str
@@ -72,8 +82,19 @@ async def update_user_role(user_id: str, payload: UpdateRoleRequest):
     Updates a user's role (used for KYC Approval).
     """
     try:
-        # Get existing prefs to preserve them
-        user = admin_users.get(user_id)
+        url = f"{settings.APPWRITE_ENDPOINT}/users/{user_id}"
+        headers = {
+            "X-Appwrite-Project": settings.APPWRITE_PROJECT_ID,
+            "X-Appwrite-Key": settings.APPWRITE_API_KEY,
+            "Content-Type": "application/json"
+        }
+        
+        # Get user for prefs
+        res = requests.get(url, headers=headers)
+        if res.status_code != 200:
+            raise HTTPException(status_code=404, detail="User not found")
+        
+        user = res.json()
         prefs = user.get("prefs", {})
         
         # Update prefs
@@ -81,13 +102,13 @@ async def update_user_role(user_id: str, payload: UpdateRoleRequest):
         if prefs.get("kyc_status") == "pending":
             prefs["kyc_status"] = "approved"
             
-        admin_users.update_prefs(user_id=user_id, prefs=prefs)
+        prefs_url = f"{settings.APPWRITE_ENDPOINT}/users/{user_id}/prefs"
+        requests.patch(prefs_url, headers=headers, json=prefs)
         
         # Update label
-        admin_users.update_labels(user_id=user_id, labels=[payload.role])
+        labels_url = f"{settings.APPWRITE_ENDPOINT}/users/{user_id}/labels"
+        requests.put(labels_url, headers=headers, json={"labels": [payload.role]})
         
         return {"status": "success", "message": f"User {user_id} upgraded to {payload.role}"}
-    except AppwriteException as e:
-        raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
