@@ -3,8 +3,6 @@ import { AnalyticsAPI } from '@/services/api';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 
-const DB_ID = 'sentiment_db';
-
 export default function Universities() {
   const { data, isLoading } = useQuery({
     queryKey: ['universitiesData'],
