@@ -54,7 +54,7 @@ export default function Search() {
         <p>Showing <span className="text-white font-medium">4</span> results for your query (0.042 seconds)</p>
         <div className="flex gap-2">
           <span>Sort by:</span>
-          <select className="bg-transparent text-white border-b border-zinc-700 focus:outline-none cursor-pointer">
+          <select title="Sort results" className="bg-transparent text-white border-b border-zinc-700 focus:outline-none cursor-pointer">
             <option>Relevance</option>
             <option>Date (Newest)</option>
             <option>Sentiment (Lowest)</option>
