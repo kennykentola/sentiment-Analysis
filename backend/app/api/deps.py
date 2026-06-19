@@ -32,7 +32,10 @@ class RequireRole:
         self.allowed_roles = allowed_roles
 
     def __call__(self, user: dict = Depends(get_current_user)):
-        user_labels = user.get("labels", [])
+        if isinstance(user, dict):
+            user_labels = user.get("labels", [])
+        else:
+            user_labels = getattr(user, "labels", [])
         
         # Super Admin has ultimate access
         if "Super Admin" in user_labels:
