@@ -1,5 +1,6 @@
+import { useState } from 'react';
 import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Download, Database, CheckCircle2, AlertCircle, Clock, FileJson, FileSpreadsheet } from 'lucide-react';
+import { Download, Database, CheckCircle2, AlertCircle, Clock, FileJson, FileSpreadsheet, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const mockExports = [
@@ -10,6 +11,41 @@ const mockExports = [
 ];
 
 export default function ExportCenter() {
+  const [isExporting, setIsExporting] = useState(false);
+
+  const handleExport = async () => {
+    try {
+      setIsExporting(true);
+      const token = localStorage.getItem('appwrite_jwt');
+      
+      const response = await fetch('https://sentiment-analysis-vc31.onrender.com/api/v1/datasets/export', {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'X-Appwrite-JWT': token || ''
+        }
+      });
+      
+      if (!response.ok) {
+        throw new Error('Export failed');
+      }
+      
+      // Convert to blob and download
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `sentiment_dataset_${new Date().toISOString().split('T')[0]}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } catch (err) {
+      alert("Failed to export dataset. Please ensure you have Researcher access.");
+    } finally {
+      setIsExporting(false);
+    }
+  };
+
   return (
     <div className="space-y-6 animate-in fade-in duration-500 max-w-7xl mx-auto">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -24,9 +60,13 @@ export default function ExportCenter() {
             <Database className="mr-2 h-4 w-4" />
             Connect via API
           </Button>
-          <Button className="bg-indigo-600 hover:bg-indigo-700 text-white">
-            <Download className="mr-2 h-4 w-4" />
-            New Batch Export
+          <Button 
+            className="bg-indigo-600 hover:bg-indigo-700 text-white" 
+            onClick={handleExport}
+            disabled={isExporting}
+          >
+            {isExporting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Download className="mr-2 h-4 w-4" />}
+            {isExporting ? "Generating CSV..." : "Export Live Dataset"}
           </Button>
         </div>
       </div>
