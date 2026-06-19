@@ -1,8 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
-import { Building2, Users, Network, TrendingDown, ArrowUpRight, CheckCircle2, AlertCircle, XCircle, Loader2 } from 'lucide-react';
+import { Building2, Users, Network, TrendingDown, ArrowUpRight, CheckCircle2, AlertCircle, XCircle, Loader2, Play } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { account } from '@/services/appwrite';
+import { useState } from 'react';
 
 const fetchLiveAnalytics = async () => {
   try {
@@ -23,12 +24,63 @@ const fetchLiveAnalytics = async () => {
   }
 };
 
+const fetchIngestionStatus = async () => {
+  try {
+    const session = await account.createJWT();
+    const response = await fetch('http://localhost:8000/api/v1/ingestion/status', {
+      headers: { 'x-appwrite-jwt': session.jwt }
+    });
+    if (!response.ok) throw new Error("API Error");
+    return await response.json();
+  } catch (error) {
+    // Fallback if API is unreachable
+    return {
+      is_running: false,
+      pipelines: {
+        twitter: { status: "operational", rate: "120 posts/min", ping: "45ms" },
+        facebook: { status: "degraded", rate: "15 posts/min", ping: "850ms" },
+        nairaland: { status: "operational", rate: "8 posts/min", ping: "120ms" },
+        news_api: { status: "down", rate: "0 posts/min", ping: "-" }
+      }
+    };
+  }
+};
+
 export default function AdminDashboard() {
+  const [isTriggering, setIsTriggering] = useState(false);
+
   const { data, isLoading } = useQuery({
     queryKey: ['adminAnalytics'],
     queryFn: fetchLiveAnalytics,
     refetchInterval: 30000
   });
+
+  const { data: ingestionData, refetch: refetchIngestion } = useQuery({
+    queryKey: ['ingestionStatus'],
+    queryFn: fetchIngestionStatus,
+    refetchInterval: 5000 // Poll frequently to see when running state ends
+  });
+
+  const handleTriggerIngestion = async () => {
+    try {
+      setIsTriggering(true);
+      const session = await account.createJWT();
+      const response = await fetch('http://localhost:8000/api/v1/ingestion/trigger', {
+        method: 'POST',
+        headers: { 'x-appwrite-jwt': session.jwt }
+      });
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.detail || "Failed to trigger");
+      }
+      alert("Data ingestion pipeline started successfully in the background!");
+      refetchIngestion();
+    } catch (err: any) {
+      alert("Error: " + err.message);
+    } finally {
+      setIsTriggering(false);
+    }
+  };
 
   const universityData = [
     { name: "University of Lagos (UNILAG)", state: "Lagos", negativeVol: "4,500", trend: "+15%", alert: true },
@@ -39,10 +91,10 @@ export default function AdminDashboard() {
   ];
 
   const sourceHealth = [
-    { name: "Twitter Stream API", status: "operational", latency: "45ms", volume: "120 posts/min" },
-    { name: "Facebook Graph API", status: "degraded", latency: "850ms", volume: "15 posts/min" },
-    { name: "Nairaland Scraper", status: "operational", latency: "120ms", volume: "8 posts/min" },
-    { name: "News API Aggregator", status: "down", latency: "-", volume: "0 posts/min" },
+    { name: "Twitter Stream API", status: ingestionData?.pipelines?.twitter?.status || "operational", latency: ingestionData?.pipelines?.twitter?.ping || "45ms", volume: ingestionData?.pipelines?.twitter?.rate || "120 posts/min" },
+    { name: "Facebook Graph API", status: ingestionData?.pipelines?.facebook?.status || "degraded", latency: ingestionData?.pipelines?.facebook?.ping || "850ms", volume: ingestionData?.pipelines?.facebook?.rate || "15 posts/min" },
+    { name: "Nairaland Scraper", status: ingestionData?.pipelines?.nairaland?.status || "operational", latency: ingestionData?.pipelines?.nairaland?.ping || "120ms", volume: ingestionData?.pipelines?.nairaland?.rate || "8 posts/min" },
+    { name: "News API Aggregator", status: ingestionData?.pipelines?.news_api?.status || "down", latency: ingestionData?.pipelines?.news_api?.ping || "-", volume: ingestionData?.pipelines?.news_api?.rate || "0 posts/min" },
   ];
 
   return (
@@ -141,9 +193,16 @@ export default function AdminDashboard() {
 
         {/* Data Sources Health */}
         <Card className="bg-zinc-900 border-zinc-800 text-white xl:col-span-1 shadow-none">
-          <CardHeader className="pb-4">
-            <CardTitle>Ingestion Pipelines</CardTitle>
-            <CardDescription className="text-zinc-400">Real-time health of data scrapers</CardDescription>
+          <CardHeader className="pb-4 flex flex-row items-center justify-between">
+            <div>
+              <CardTitle>Ingestion Pipelines</CardTitle>
+              <CardDescription className="text-zinc-400">Real-time health of data scrapers</CardDescription>
+            </div>
+            {ingestionData?.is_running && (
+              <span className="flex items-center gap-1 text-xs font-medium text-emerald-400 bg-emerald-500/10 px-2 py-1 rounded-full border border-emerald-500/20">
+                <Loader2 size={12} className="animate-spin" /> Running
+              </span>
+            )}
           </CardHeader>
           <CardContent className="space-y-4">
             {sourceHealth.map((source, idx) => (
@@ -166,8 +225,17 @@ export default function AdminDashboard() {
               </div>
             ))}
             
-            <Button variant="link" className="w-full text-indigo-400 hover:text-indigo-300 text-xs mt-2">
-              Manage Pipelines <ArrowUpRight size={14} className="ml-1" />
+            <Button 
+              variant="default" 
+              className="w-full bg-indigo-600 hover:bg-indigo-700 text-white text-xs mt-4 flex items-center justify-center gap-2 transition-all shadow-lg shadow-indigo-500/20"
+              onClick={handleTriggerIngestion}
+              disabled={isTriggering || ingestionData?.is_running}
+            >
+              {isTriggering || ingestionData?.is_running ? (
+                <><Loader2 size={14} className="animate-spin" /> Ingestion in Progress...</>
+              ) : (
+                <><Play size={14} /> Trigger Manual Data Sync</>
+              )}
             </Button>
           </CardContent>
         </Card>

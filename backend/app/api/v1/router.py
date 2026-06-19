@@ -7,7 +7,7 @@ class HealthResponse(BaseModel):
     status: str
     message: str
 
-from app.api.v1.endpoints import posts, analytics, users, datasets, ml, roles
+from app.api.v1.endpoints import posts, analytics, users, datasets, ml, roles, ingestion
 
 @router.get("/health", response_model=HealthResponse)
 async def health_check():
@@ -19,3 +19,4 @@ router.include_router(users.router, prefix="/users", tags=["users"])
 router.include_router(datasets.router, prefix="/datasets", tags=["datasets"])
 router.include_router(ml.router, prefix="/ml", tags=["machine-learning"])
 router.include_router(roles.router, prefix="/roles", tags=["roles"])
+router.include_router(ingestion.router, prefix="/ingestion", tags=["ingestion"])
