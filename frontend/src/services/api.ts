@@ -1,6 +1,7 @@
 import { account } from './appwrite';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000/api/v1';
+const rawApiUrl = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000/api/v1';
+export const API_BASE_URL = rawApiUrl.endsWith('/api/v1') ? rawApiUrl : `${rawApiUrl}/api/v1`;
 
 async function fetchWithAuth(endpoint: string, options: RequestInit = {}) {
     try {
@@ -46,5 +47,13 @@ export const RolesAPI = {
     }),
     deleteRole: (id: string) => fetchWithAuth(`/roles/${id}`, {
         method: 'DELETE'
+    })
+};
+
+export const UsersAPI = {
+    getUsers: () => fetchWithAuth('/users/'),
+    updateUserRole: (userId: string, role: string) => fetchWithAuth(`/users/${userId}/role`, {
+        method: 'PUT',
+        body: JSON.stringify({ role })
     })
 };

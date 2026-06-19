@@ -4,29 +4,8 @@ import { ShieldCheck, UserCheck, Search, Image as ImageIcon, CheckCircle, XCircl
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { account, storage } from '@/services/appwrite';
-
-const fetchUsers = async () => {
-  const session = await account.createJWT();
-  const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://sentiment-analysis-vc31.onrender.com/api/v1';
-  const response = await fetch(`${API_BASE_URL}/users/`, {
-    headers: { 'x-appwrite-jwt': session.jwt }
-  });
-  if (!response.ok) throw new Error("Failed to fetch users");
-  return await response.json();
-};
-
-const updateUserRole = async ({ userId, role }: { userId: string, role: string }) => {
-  const session = await account.createJWT();
-  const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://sentiment-analysis-vc31.onrender.com/api/v1';
-  const response = await fetch(`${API_BASE_URL}/users/${userId}/role`, {
-    method: 'PUT',
-    headers: { 'x-appwrite-jwt': session.jwt, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ role })
-  });
-  if (!response.ok) throw new Error("Failed to update role");
-  return await response.json();
-};
+import { storage } from '@/services/appwrite';
+import { UsersAPI } from '@/services/api';
 
 export default function UserManagement() {
   const queryClient = useQueryClient();
@@ -35,11 +14,11 @@ export default function UserManagement() {
 
   const { data: usersData, isLoading } = useQuery({
     queryKey: ['adminUsers'],
-    queryFn: fetchUsers,
+    queryFn: UsersAPI.getUsers,
   });
 
   const mutation = useMutation({
-    mutationFn: updateUserRole,
+    mutationFn: (variables: { userId: string, role: string }) => UsersAPI.updateUserRole(variables.userId, variables.role),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['adminUsers'] });
     }
