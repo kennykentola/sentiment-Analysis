@@ -45,11 +45,15 @@ async def create_user(payload: CreateUserRequest):
         # Update prefs
         prefs = {"role": payload.role}
         prefs_url = f"{settings.APPWRITE_ENDPOINT}/users/{user_id}/prefs"
-        requests.patch(prefs_url, headers=headers, json=prefs)
+        res_prefs = requests.patch(prefs_url, headers=headers, json={"prefs": prefs})
+        res_prefs.raise_for_status()
         
-        # Update labels
-        labels_url = f"{settings.APPWRITE_ENDPOINT}/users/{user_id}/labels"
-        requests.put(labels_url, headers=headers, json={"labels": [payload.role]})
+        # Update labels (only keep alphanumeric characters for Appwrite validation)
+        sanitized_label = "".join(c for c in payload.role if c.isalnum())
+        if sanitized_label:
+            labels_url = f"{settings.APPWRITE_ENDPOINT}/users/{user_id}/labels"
+            res_labels = requests.put(labels_url, headers=headers, json={"labels": [sanitized_label]})
+            res_labels.raise_for_status()
         
         return {"status": "success", "user_id": user_id, "message": f"User {payload.name} created with role {payload.role}"}
     except Exception as e:
@@ -103,11 +107,15 @@ async def update_user_role(user_id: str, payload: UpdateRoleRequest):
             prefs["kyc_status"] = "approved"
             
         prefs_url = f"{settings.APPWRITE_ENDPOINT}/users/{user_id}/prefs"
-        requests.patch(prefs_url, headers=headers, json=prefs)
+        res_prefs = requests.patch(prefs_url, headers=headers, json={"prefs": prefs})
+        res_prefs.raise_for_status()
         
-        # Update label
-        labels_url = f"{settings.APPWRITE_ENDPOINT}/users/{user_id}/labels"
-        requests.put(labels_url, headers=headers, json={"labels": [payload.role]})
+        # Update label (only keep alphanumeric characters for Appwrite validation)
+        sanitized_label = "".join(c for c in payload.role if c.isalnum())
+        if sanitized_label:
+            labels_url = f"{settings.APPWRITE_ENDPOINT}/users/{user_id}/labels"
+            res_labels = requests.put(labels_url, headers=headers, json={"labels": [sanitized_label]})
+            res_labels.raise_for_status()
         
         return {"status": "success", "message": f"User {user_id} upgraded to {payload.role}"}
     except Exception as e:

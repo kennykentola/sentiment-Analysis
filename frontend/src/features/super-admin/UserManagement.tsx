@@ -108,7 +108,7 @@ export default function UserManagement() {
                           <Button 
                             size="sm" 
                             className="bg-emerald-600 hover:bg-emerald-700 text-white"
-                            onClick={() => handleApprove(user.$id, user.prefs?.requestedRole || 'researcher')}
+                            onClick={() => handleApprove(user.$id, 'researcher')}
                             disabled={mutation.isPending}
                           >
                             <CheckCircle size={14} className="mr-1" /> Approve
