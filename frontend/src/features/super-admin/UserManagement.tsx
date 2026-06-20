@@ -30,7 +30,10 @@ export default function UserManagement() {
 
   const handleViewId = async (fileId: string) => {
     try {
-      const result = storage.getFileView('id_verification', fileId);
+      const result = storage.getFileView(
+        import.meta.env.VITE_APPWRITE_BUCKET_ID || 'sentiment', 
+        fileId
+      );
       setSelectedIdUrl(result.toString());
     } catch (error) {
       console.error("Failed to load ID image", error);

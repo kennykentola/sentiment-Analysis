@@ -10,6 +10,7 @@ class Settings(BaseSettings):
     APPWRITE_PROJECT_ID: str = "sentiment"
     APPWRITE_API_KEY: str = ""
     APPWRITE_DB_ID: str = "sentiment_db"
+    APPWRITE_BUCKET_ID: str = "sentiment"
 
     # AI Pipeline
     GEMINI_API_KEY: str = ""

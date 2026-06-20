@@ -56,7 +56,7 @@ export default function Register() {
 
         // 1. Upload ID card to secure Appwrite Storage Bucket
         const fileUpload = await storage.createFile(
-          'id_verification', 
+          import.meta.env.VITE_APPWRITE_BUCKET_ID || 'sentiment', 
           ID.unique(), 
           idFile
         );

@@ -132,7 +132,7 @@ def init_db():
 def init_storage():
     from app.repositories.appwrite_client import storage
     print("Checking Appwrite Storage...")
-    bucket_id = "id_verification"
+    bucket_id = settings.APPWRITE_BUCKET_ID
     try:
         storage.get_bucket(bucket_id)
         print(f"Bucket '{bucket_id}' already exists.")
